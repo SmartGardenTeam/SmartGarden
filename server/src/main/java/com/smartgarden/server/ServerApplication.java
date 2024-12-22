@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 @SpringBootApplication
 public class ServerApplication implements CommandLineRunner {
 
-	private static final Logger log = LoggerFactory.getLogger(ServerApplication.class);  // Manually defining the logger
+	private static final Logger log = LoggerFactory.getLogger(ServerApplication.class);  // Logger za ispis
 	private final DataSource dataSource;
 
 	public ServerApplication(DataSource dataSource) {
@@ -25,8 +25,11 @@ public class ServerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		log.info("Datasource: " + dataSource.toString());  // Using manually defined logger
-		final JdbcTemplate restTemplate = new JdbcTemplate(dataSource);
-		restTemplate.execute("SELECT 1");
+		log.info("Povezan na bazu preko DataSource: " + dataSource.toString());
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+		// Testiranje konekcije
+		jdbcTemplate.execute("SELECT 1");
+		log.info("Konekcija sa bazom je uspešna!");
 	}
 }
