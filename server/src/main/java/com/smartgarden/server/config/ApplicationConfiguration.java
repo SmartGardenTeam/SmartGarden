@@ -24,7 +24,7 @@ public class ApplicationConfiguration {
         return username -> userRepository.findByEmail(username).map(user -> new org.springframework.security.core.userdetails.User(
                         user.getEmail(),
                         user.getPassword(),
-                        user.getAuthorities() // Replace with roles/authorities from your User entity
+                        user.getAuthorities()
                 ))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
 

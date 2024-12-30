@@ -8,6 +8,7 @@ import com.smartgarden.server.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,19 +39,27 @@ public class AuthenticationService {
         sendVerificationEmail(user);
         return userRepository.save(user);
     }
-    public User authenticate(LoginUserDto input){
+    public User authenticate(LoginUserDto input) {
         User user = userRepository.findByEmail(input.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        if(!user.isEnabled()){
-            throw new RuntimeException("Account is not verified.Please verify your account");
-        }
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
-                        input.getPassword()
-                )
 
-        );
+        if (!user.isEnabled()) {
+            throw new RuntimeException("Account is not verified. Please verify your account");
+        }
+
+        // Authenticate the user and catch any authentication exceptions
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            input.getEmail(),
+                            input.getPassword()
+                    )
+            );
+            System.out.println("Authentication successful");
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("Authentication failed: " + e.getMessage(), e);
+        }
+
         return user;
     }
     public void verifyUser(VerifyUserDto input){

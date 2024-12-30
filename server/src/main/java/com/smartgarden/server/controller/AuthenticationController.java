@@ -30,11 +30,17 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
-        User authenticatedUser = authenticationService.authenticate(loginUserDto);
-        String jwtToken = jwtService.generateToken(authenticatedUser);
+        try {
+            User authenticatedUser = authenticationService.authenticate(loginUserDto);
+            String jwtToken = jwtService.generateToken(authenticatedUser);
+            LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getJwtExpirationTime());
+            return ResponseEntity.ok(loginResponse);
+        } catch (Exception e) {
 
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getJwtExpirationTime());
-        return ResponseEntity.ok(loginResponse);
+            System.out.println("Authentication failed: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new LoginResponse("Authentication failed", 0));
+        }
     }
 
     @PostMapping("/verify")
