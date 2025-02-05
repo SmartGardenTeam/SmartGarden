@@ -10,7 +10,6 @@ import java.util.Properties;
 
 @Configuration
 public class EmailConfiguration {
-
     @Value("${spring.mail.username}")
     private String emailUsername;
 
@@ -19,7 +18,6 @@ public class EmailConfiguration {
 
     @Bean
     public JavaMailSender javaMailSender(){
-
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);

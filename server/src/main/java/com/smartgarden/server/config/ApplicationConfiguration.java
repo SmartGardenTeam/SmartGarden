@@ -27,7 +27,6 @@ public class ApplicationConfiguration {
                         user.getAuthorities()
                 ))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
-
     }
 
     @Bean
@@ -36,7 +35,7 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration config)throws Exception {
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
@@ -49,5 +48,4 @@ public class ApplicationConfiguration {
 
         return authProvider;
     }
-
 }

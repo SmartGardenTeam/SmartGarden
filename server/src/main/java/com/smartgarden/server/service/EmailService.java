@@ -1,7 +1,7 @@
 package com.smartgarden.server.service;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,8 +12,8 @@ public class EmailService {
     @Autowired
     private JavaMailSender emailSender;
 
-
-    public void sendVerificationEmail(String to, String subject, String body)throws MessagingException {
+    @SneakyThrows
+    public void sendVerificationEmail(String to, String subject, String body) {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
