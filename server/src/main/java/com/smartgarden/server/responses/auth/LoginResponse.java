@@ -1,4 +1,4 @@
-package com.smartgarden.server.responses;
+package com.smartgarden.server.responses.auth;
 
 import lombok.Getter;
 import lombok.Setter;

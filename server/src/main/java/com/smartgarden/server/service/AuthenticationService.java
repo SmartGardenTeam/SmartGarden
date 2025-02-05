@@ -5,15 +5,17 @@ import com.smartgarden.server.dto.RegisterUserDto;
 import com.smartgarden.server.dto.VerifyUserDto;
 import com.smartgarden.server.model.User;
 import com.smartgarden.server.repository.UserRepository;
-import jakarta.mail.MessagingException;
+import com.smartgarden.server.responses.auth.LoginResponse;
+import com.smartgarden.server.responses.Response;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -23,31 +25,48 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final JwtService jwtService;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
+        this.jwtService = jwtService;
     }
 
-    public User signup(RegisterUserDto input){
+    public Response<String> register(RegisterUserDto input){
         User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationExpiresAt(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);
         sendVerificationEmail(user);
-        return userRepository.save(user);
-    }
-    public User authenticate(LoginUserDto input) {
-        User user = userRepository.findByEmail(input.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        userRepository.save(user);
 
-        if (!user.isEnabled()) {
-            throw new RuntimeException("Account is not verified. Please verify your account");
+        Response<String> response = new Response<>();
+        response.setData("User successfully registered");
+
+        return response;
+    }
+
+    public Response<LoginResponse> authenticate(LoginUserDto input) {
+        Response<LoginResponse> response = new Response<>();
+        User user = userRepository.findByEmail(input.getEmail()).orElse(null);
+
+        if(user == null) {
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("User not found")));
+
+            return response;
         }
 
-        // Authenticate the user and catch any authentication exceptions
+        if (!user.isEnabled()) {
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("Account is not verified. Please verify your account")));
+
+            return response;
+        }
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -60,45 +79,76 @@ public class AuthenticationService {
             throw new RuntimeException("Authentication failed: " + e.getMessage(), e);
         }
 
-        return user;
+        String jwtToken = jwtService.generateToken(user);
+
+        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getJwtExpirationTime());
+        response.setData(loginResponse);
+
+        return response;
     }
-    public void verifyUser(VerifyUserDto input){
+
+    public Response<String> verifyUser(VerifyUserDto input){
+        Response<String> response = new Response<>();
         Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
-        if(optionalUser.isPresent()){
+
+        if(optionalUser.isPresent()) {
             User user = optionalUser.get();
-            if(user.getVerificationExpiresAt().isBefore(LocalDateTime.now())){
-                throw new RuntimeException("Verification code has expired");
+
+            if(user.isEnabled()) {
+                response.setSuccess(Boolean.FALSE);
+                response.setErrors(new ArrayList<>(List.of("User already verified")));
+
+                return response;
             }
-            if(user.getVerificationCode().equals(input.getVerificationCode())){
+
+            if (user.getVerificationExpiresAt().isBefore(LocalDateTime.now())) {
+                response.setSuccess(Boolean.FALSE);
+                response.setErrors(new ArrayList<>(List.of("Verification code has expired")));
+
+                return response;
+            }
+
+            if (user.getVerificationCode().equals(input.getVerificationCode())) {
                 user.setEnabled(true);
                 user.setVerificationCode(null);
                 user.setVerificationExpiresAt(null);
                 userRepository.save(user);
+                response.setErrors(new ArrayList<>(List.of("User successfully verified")));
+
+                return response;
             }
             else {
-                throw new RuntimeException("Invalid verification code");
+                response.setErrors(new ArrayList<>(List.of("Invalid verification code")));
+
+                return response;
             }
         }
         else {
-            throw new RuntimeException("User not found");
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("User not found")));
+
+            return response;
         }
     }
-    public void resendVerificationEmail(String email){
+
+    public Response<String> resendVerificationEmail(String email){
+        Response<String> response = new Response<>();
         Optional <User> optionalUser = userRepository.findByEmail(email);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            if(user.isEnabled())
-            {
-                throw new RuntimeException("Account is already verified");
-            }
-            user.setVerificationCode(generateVerificationCode());
-            user.setVerificationExpiresAt(LocalDateTime.now().plusMinutes(15));
-            sendVerificationEmail(user);
-            userRepository.save(user);
+        User user = optionalUser.get();
+
+        if(user.isEnabled())
+        {
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("Account already verified")));
         }
-        else{
-            throw new RuntimeException("User not found");
-        }
+
+        user.setVerificationCode(generateVerificationCode());
+        user.setVerificationExpiresAt(LocalDateTime.now().plusMinutes(15));
+        sendVerificationEmail(user);
+        userRepository.save(user);
+
+        response.setData("Verification email successfully resent");
+        return response;
     }
 
     public void sendVerificationEmail(User user){
@@ -116,11 +166,8 @@ public class AuthenticationService {
                 + "</div>"
                 + "</body>"
                 + "</html>";
-        try{
-            emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
-        }catch(MessagingException e){
-            e.printStackTrace();
-        }
+
+        emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
     }
 
     private String generateVerificationCode(){
