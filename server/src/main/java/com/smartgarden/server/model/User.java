@@ -37,15 +37,16 @@ public class User implements UserDetails {
     @Column(name = "verification_expiration")
     private LocalDateTime verificationExpiresAt;
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Garden> gardens;
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public User() {
-
-    }
+    public User() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
