@@ -1,35 +1,73 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
+import Layout from "./app/layouts/Layout";
+import Login from "./app/auth/ui/login/Login";
+import Signup from "./app/auth/ui/signup/Signup";
+import Home from "./app/general/Home";
+import PageNotFound from "./app/general/PageNotFound";
+import HydroponicGardens from "./app/garden/HydroponicGardens";
+import HydroponicGarden from "./app/garden/HydroponicGarden";
+import CodeConfirmationPage from "./app/auth/ui/code-confirmation-page/CodeConfirmationPage";
+import AuthGuard from "./app/auth/guards/AuthGuard";
+import UnauthGuard from "./app/auth/guards/UnauthGuard";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <AuthGuard>
+        <Layout />
+      </AuthGuard>
+    ),
+    errorElement: <PageNotFound />,
+    children: [
+      {
+        index: true,
+        path: "home",
+        element: <Home />,
+      },
+      {
+        path: "hydroponicGardens",
+        element: <HydroponicGardens />,
+      },
+      {
+        path: "hydroponicGardens/:hydroponicGardenId",
+        element: <HydroponicGarden />,
+      },
+    ],
+  },
+  {
+    path: "/signup",
+    element: (
+      <UnauthGuard>
+        <Signup />
+      </UnauthGuard>
+    ),
+  },
+  {
+    path: "/confirm-code",
+    element: (
+      <UnauthGuard>
+        <CodeConfirmationPage />
+      </UnauthGuard>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <UnauthGuard>
+        <Login />
+      </UnauthGuard>
+    ),
+  },
+  {
+    path: "*",
+    element: <PageNotFound />,
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
