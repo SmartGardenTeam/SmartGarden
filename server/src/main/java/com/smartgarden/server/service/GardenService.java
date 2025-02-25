@@ -6,18 +6,16 @@ import com.smartgarden.server.model.User;
 import com.smartgarden.server.repository.GardenRepository;
 import com.smartgarden.server.repository.UserRepository;
 import com.smartgarden.server.responses.Response;
-import com.smartgarden.server.responses.garden.FindOwnersGardensResponse;
+import com.smartgarden.server.responses.garden.FindGardensByOwnerIdResponse;
 import com.smartgarden.server.responses.garden.GardenResponse;
 import com.smartgarden.server.responses.garden.OwnerResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 public class GardenService {
@@ -31,14 +29,14 @@ public class GardenService {
         this.jwtService = jwtService;
     }
 
-    public Response<Iterable<FindOwnersGardensResponse>> findOwnersGardens(String authHeader) {
-        Response<Iterable<FindOwnersGardensResponse>> response = new Response<>();
+    public Response<Iterable<FindGardensByOwnerIdResponse>> findGardensByOwnerId(String authHeader) {
+        Response<Iterable<FindGardensByOwnerIdResponse>> response = new Response<>();
 
         String token = authHeader.replace("Bearer ", "");
         User owner = (userRepository.findByUsername(jwtService.extractUsername(token)).orElse(null));
 
         if(owner == null) {
-            response.setErrors(new ArrayList<>(List.of("User not found")));
+            response.setErrors(new ArrayList<>(List.of("user does not exist")));
             response.setSuccess(false);
 
             return response;
@@ -46,8 +44,8 @@ public class GardenService {
 
         List<Garden> gardensList = gardenRepository.findByOwnerId(owner.getId()).orElse(Collections.emptyList());
 
-        Iterable<FindOwnersGardensResponse> gardens = gardensList.stream()
-                .map(garden -> new FindOwnersGardensResponse(garden.getId(),garden.getName(),garden.getLocation(), new OwnerResponse(owner.getId(), owner.getUsername(), owner.getEmail()), garden.getCreationDate()))
+        Iterable<FindGardensByOwnerIdResponse> gardens = gardensList.stream()
+                .map(garden -> new FindGardensByOwnerIdResponse(garden.getId(),garden.getName(),garden.getLocation(), new OwnerResponse(owner.getId(), owner.getUsername(), owner.getEmail()), garden.getCreationDate()))
                 .collect(Collectors.toList());
         response.setData(gardens);
 
@@ -59,7 +57,7 @@ public class GardenService {
         Response<GardenResponse> response = new Response<>();
 
         if(user == null) {
-           response.setErrors(new ArrayList<>(List.of("User not found")));
+           response.setErrors(new ArrayList<>(List.of("t")));
            response.setSuccess(false);
 
            return response;
@@ -68,7 +66,6 @@ public class GardenService {
         Garden garden = new Garden(gardendto.getName(), gardendto.getLocation(), user);
         garden.setCreationDate(LocalDateTime.now());
         gardenRepository.save(garden);
-
 
         response.setData(new GardenResponse(garden.getId(), "Garden created successfully"));
 
@@ -82,7 +79,7 @@ public class GardenService {
 
         if(garden == null) {
             response.setSuccess(false);
-            response.setErrors(new ArrayList<>(List.of("Garden not found with id: " + gardenId)));
+            response.setErrors(new ArrayList<>(List.of("Garden does not exist")));
 
             return response;
         }
@@ -91,7 +88,7 @@ public class GardenService {
 
         if(owner == null) {
             response.setSuccess(false);
-            response.setErrors(new ArrayList<>(List.of("User not found")));
+            response.setErrors(new ArrayList<>(List.of("Owner of the garden does not exist")));
 
             return response;
         }
@@ -110,7 +107,7 @@ public class GardenService {
 
         if(garden == null) {
             response.setSuccess(false);
-            response.setErrors(new ArrayList<>(List.of("Garden not found with id: " + id)));
+            response.setErrors(new ArrayList<>(List.of("Garden does not exist")));
 
             return response;
         }
@@ -123,5 +120,4 @@ public class GardenService {
 
         return response;
     }
-
 }
