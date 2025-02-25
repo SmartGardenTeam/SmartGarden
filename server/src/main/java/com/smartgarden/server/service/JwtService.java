@@ -18,8 +18,11 @@ public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${security.jwt.expiration-time}")
-    private long jwtExpiration;
+    @Value("${security.jwt.access-token-expiration}")
+    private long accessJwtExpiration;
+
+    @Value("${security.jwt.refresh-token-expiration}")
+    private long refreshJwtExpiration;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -30,16 +33,12 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateAccessToken(UserDetails userDetails) {
+        return buildToken(new HashMap<>(), userDetails, accessJwtExpiration);
     }
 
-    public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
-        return buildToken(claims, userDetails, jwtExpiration);
-    }
-
-    public long getJwtExpirationTime() {
-        return jwtExpiration;
+    public String generateRefreshToken(UserDetails userDetails) {
+        return buildToken(new HashMap<>(), userDetails, refreshJwtExpiration);
     }
 
     private String buildToken(Map<String, Object> claims, UserDetails userDetails, long expirationTime) {
