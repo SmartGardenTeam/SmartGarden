@@ -58,27 +58,17 @@ const Signup = () => {
 
   return (
     <>
-      <div className="d-flex vh-100 justify-content-center scale">
-        <div
-          className="row d-flex m-auto container rounded"
-          style={{ width: "60%" }}
-        >
-          <div
-            className="col d-flex rounded-start-4 flex-column p-0 m-auto shadow"
-            style={{ height: "62vh", minHeight: "700px" }}
-          >
+      <div className="d-flex justify-content-center min-vh-100 min-vw-100 vw-100 container m">
+        <div className="row m-auto">
+          <div className="col d-flex rounded-start-4 p-0 shadow mw-25 mh-50">
             <img
               src={SignInImage}
               alt="des"
-              className="object-fit-cover rounded-start-4 shadow"
-              style={{ height: "62vh", minHeight: "700px" }}
+              className="w-100 h-100 object-fit-cover rounded-start-4"
             />
           </div>
-          <div
-            className="col d-flex rounded-end-4 flex-column p-0 m-auto shadow"
-            style={{ height: "62vh", minHeight: "700px" }}
-          >
-            <div className="m-auto" style={{ width: "65%", minWidth: "320px" }}>
+          <div className="col d-flex rounded-end-4 flex-column p-0  shadow">
+            <div className="w-80 min-h-100 m-auto">
               <div className="d-flex flex-row pb-4">
                 <img src={SGLogo} alt="des" />
                 <h3>Smart Garden</h3>
