@@ -8,6 +8,7 @@ import AuthService from "../../services/AuthService";
 import { VerifyEmailRequest } from "../../models/VerifyEmailRequest";
 import { useUser } from "../../../shared/context/UserContext";
 import { Toast } from "primereact/toast";
+import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
 
 const CodeConfirmationPage = () => {
   const { currentUser } = useUser();
@@ -59,28 +60,38 @@ const CodeConfirmationPage = () => {
   };
   return (
     <>
-      <div className="flex justify-content-center align-items-center min-h-screen">
-        <Card title="Confirm Your Code" className="w-25rem">
-          <div className="p-fluid">
-            <label htmlFor="code">Enter Code</label>
-            <InputText
-              id="code"
-              value={`${code.verificationCode}`}
-              onChange={handleSetCode}
-              className="w-full"
-            />
-            {error && (
-              <Message severity="error" text={error} className="mt-2" />
-            )}
-            <Button
-              label="Verify"
-              icon="pi pi-check"
-              onClick={handleSubmit}
-              loading={loading}
-              className="mt-3 w-full"
-            />
-          </div>
-        </Card>
+      <div className="d-flex vh-100 justify-content-center align-items-center scale">
+        <div className="flex justify-content-center align-items-center min-h-screen">
+          <Card className="w-25rem">
+            <div className="d-flex align-items-center">
+              <img
+                src={SGLogo}
+                alt="Logo"
+                className="me-2"
+                style={{ width: "40px", height: "40px" }}
+              />
+              <h5 className="m-0">Confirm Your Code</h5>
+            </div>
+            <div className="p-fluid">
+              <label htmlFor="code">Enter Code</label>
+              <InputText
+                id="code"
+                value={`${code.verificationCode}`}
+                onChange={handleSetCode}
+                className="w-full"
+              />
+              {error && (
+                <Message severity="error" text={error} className="mt-2" />
+              )}
+              <Button
+                label="Verify"
+                onClick={handleSubmit}
+                loading={loading}
+                className="mt-3 w-full"
+              />
+            </div>
+          </Card>
+        </div>
       </div>
       <Toast ref={toast} />
     </>

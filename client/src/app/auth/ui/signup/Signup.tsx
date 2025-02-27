@@ -124,11 +124,10 @@ const Signup = () => {
                 />
                 <Button
                   value="Sign up"
+                  label="Register"
                   onClick={handleSubmit}
                   className="p-button"
-                >
-                  Register
-                </Button>
+                />
               </form>
             </div>
           </div>
