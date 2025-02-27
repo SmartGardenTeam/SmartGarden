@@ -1,0 +1,12 @@
+.sidebar {
+  width: 250px;
+  height: 100%;
+  background-color: #f1f1f5;
+  border-right: 1px solid #f5f5f5;
+  overflow-y: auto;
+}
+
+.isActive {
+  text-decoration: none;
+  color: orange;
+}

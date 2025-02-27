@@ -1,0 +1,22 @@
+.layout {
+  width: -webkit-fill-available;
+}
+
+.mainContent {
+  min-width: calc(100vw - 250px);
+}
+
+.outlet {
+  height: calc(100% - 80px - 24px);
+}
+
+.header {
+  height: 80px;
+}
+
+.footer {
+  height: 24px;
+  p {
+    margin: 0;
+  }
+}

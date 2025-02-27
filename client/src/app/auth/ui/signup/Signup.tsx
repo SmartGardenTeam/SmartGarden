@@ -7,6 +7,8 @@ import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 import { useUser } from "../../../shared/context/UserContext";
 import UserModel from "../../../shared/models/UserModel";
+import SignInImage from "../../../../assets/images/SignInBackGround.svg";
+import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
 
 const Signup = () => {
   const [user, setUser] = useState<SignupRequest>({
@@ -56,23 +58,33 @@ const Signup = () => {
 
   return (
     <>
-      <body className="d-flex justify-content-center min-vw-100 vw-100 container">
-        <div className="row">
-          <div className="col d-flex align-items-center p-0 justify-content-center mw-25 mh-50">
+      <div className="d-flex vh-100 justify-content-center scale">
+        <div
+          className="row d-flex m-auto container rounded"
+          style={{ width: "60%" }}
+        >
+          <div
+            className="col d-flex rounded-start-4 flex-column p-0 m-auto shadow"
+            style={{ height: "62vh", minHeight: "700px" }}
+          >
             <img
-              src="../../../src/assets/SignInBackGround.svg"
+              src={SignInImage}
               alt="des"
-              class="w-100 h-100 object-fit-cover"
+              className="object-fit-cover rounded-start-4 shadow"
+              style={{ height: "62vh", minHeight: "700px" }}
             />
           </div>
-          <div className="col d-flex  flex-column p-0 shadow">
-            <div class="w-80 mx-auto my-auto">
-              <div className="d-flex flex-row mx-">
-                <img src="../../../src/assets/SmartGardenLogo.svg" alt="des" />
+          <div
+            className="col d-flex rounded-end-4 flex-column p-0 m-auto shadow"
+            style={{ height: "62vh", minHeight: "700px" }}
+          >
+            <div className="m-auto" style={{ width: "65%", minWidth: "320px" }}>
+              <div className="d-flex flex-row pb-4">
+                <img src={SGLogo} alt="des" />
                 <h3>Smart Garden</h3>
               </div>
 
-              <h2 className="text-2xl font-bold mt-3">Create an account</h2>
+              <h2 className="text-2xl font-bold mt-4">Create an account</h2>
               <h6 className="">
                 Already have an account?{" "}
                 <span
@@ -84,7 +96,7 @@ const Signup = () => {
               </h6>
               <form
                 onSubmit={handleSubmit}
-                className="w-80 d-flex flex-column justify-space-between gap-3 "
+                className="w-80 d-flex flex-column justify-space-between gap-3 my-4"
               >
                 <InputText
                   type="text"
@@ -110,21 +122,19 @@ const Signup = () => {
                   onChange={handleChange}
                   required
                 />
-                <button
-                  type="button"
+                <Button
                   value="Sign up"
                   onClick={handleSubmit}
-                  class="btn btn-outline-success w-100 mx-auto"
+                  className="p-button"
                 >
                   Register
-                </button>
+                </Button>
               </form>
             </div>
           </div>
         </div>
-
-        <Toast ref={toast} />
-      </body>
+      </div>
+      <Toast ref={toast} />
     </>
   );
 };

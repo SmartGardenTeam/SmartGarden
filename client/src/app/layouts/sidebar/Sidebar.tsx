@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
-import classes from "./Layout.module.scss";
+import classes from "./Sidebar.module.scss";
 
 export default function Sidebar() {
   return (
     <>
-      <header>
+      <div className={classes.sidebar}>
         <nav>
           <ul>
             <li>
@@ -29,7 +29,7 @@ export default function Sidebar() {
             </li>
           </ul>
         </nav>
-      </header>
+      </div>
     </>
   );
 }
