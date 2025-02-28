@@ -1,0 +1,31 @@
+@layer bootstrap, primereact;
+
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/utilities";
+@import "bootstrap/dist/css/bootstrap.min.css" layer(bootstrap);
+@import "primeicons/primeicons.css";
+@import "assets/styles/Colors.module.scss";
+@import "../public/themes/lara-green/theme.scss";
+@import "primereact/resources/primereact.min.css";
+
+[data-bs-theme="light"] {
+  --bs-body-bg: #f3f7f8;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #1f2326;
+}
+
+[data-bs-theme="light"] .card-background {
+  background: #fff !important;
+  border-radius: 12px;
+}
+
+[data-bs-theme="dark"] .card-background {
+  background: #242b30 !important;
+  border-radius: 12px;
+}
