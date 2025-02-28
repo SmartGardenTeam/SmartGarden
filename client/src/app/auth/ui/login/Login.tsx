@@ -10,6 +10,8 @@ import { useAuth } from "../../context/AuthContext";
 import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
 import SignInImage from "../../../../assets/images/SignInBackGround.svg";
 import { Checkbox } from "primereact/checkbox";
+import LoginImage from "../../../../assets/images/LoginAndSignup.svg";
+import { Card } from "primereact/card";
 
 const Login = () => {
   const { setAccessToken, setRefreshToken } = useAuth();
@@ -47,7 +49,7 @@ const Login = () => {
   return (
     <>
       <div className="d-flex justify-content-center min-vh-100 min-vw-100 vw-100 container m">
-        <div className="row m-auto">
+        <div className="row m-auto card-background">
           <div className="col d-flex rounded-start-4 flex-column p-0  shadow">
             <div className="w-80 min-h-100 m-auto">
               <div className="d-flex mb-4">
@@ -58,6 +60,7 @@ const Login = () => {
               <h6 className="">
                 Don't have an account?{" "}
                 <span
+                  role="button"
                   className="text-success cursor-pointer"
                   onClick={() => navigate("/signup")}
                 >
@@ -74,7 +77,7 @@ const Login = () => {
                   placeholder="Email"
                   value={user.email}
                   onChange={handleChange}
-                  className="w-full p-2 border rounded"
+                  className="w-full border rounded"
                   required
                 />
                 <InputText
@@ -83,7 +86,7 @@ const Login = () => {
                   placeholder="Password"
                   value={user.password}
                   onChange={handleChange}
-                  className="w-full p-2 border rounded"
+                  className="w-full border rounded"
                   required
                 />
                 <Button
@@ -95,18 +98,12 @@ const Login = () => {
               </form>
               <div className="d-flex justify-space-between gap-4 mt-3">
                 <div className="d-flex align-items-center">
-                  <Checkbox
-                  //onChange={(e) => setChecked(e.checked)}
-                  //checked={checked}
-                  ></Checkbox>
+                  <Checkbox onChange={() => {}} checked={false}></Checkbox>
                   <label htmlFor="acc" className="mx-2">
                     Remember me
                   </label>
                 </div>
-                <span
-                  className="text-success cursor-pointer"
-                  //onClick={() => navigate("/signup")}
-                >
+                <span className="text-success cursor-pointer" role="button">
                   Forgot password?
                 </span>
               </div>
@@ -114,7 +111,7 @@ const Login = () => {
           </div>
           <div className="col d-flex rounded-end-4 p-0 shadow mw-25 mh-50">
             <img
-              src={SignInImage}
+              src={LoginImage}
               alt="des"
               className="w-100 h-100 object-fit-cover rounded-end-4"
             />

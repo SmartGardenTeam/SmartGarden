@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./App.css";
+import "./App.scss";
 import Layout from "./app/layouts/layout/Layout";
 import Login from "./app/auth/ui/login/Login";
 import Signup from "./app/auth/ui/signup/Signup";
@@ -10,6 +10,8 @@ import HydroponicGarden from "./app/garden/HydroponicGarden";
 import CodeConfirmationPage from "./app/auth/ui/code-confirmation-page/CodeConfirmationPage";
 import AuthGuard from "./app/auth/guards/AuthGuard";
 import UnauthGuard from "./app/auth/guards/UnauthGuard";
+import { useState } from "react";
+import PrimeReact from "primereact/api";
 
 const router = createBrowserRouter([
   {

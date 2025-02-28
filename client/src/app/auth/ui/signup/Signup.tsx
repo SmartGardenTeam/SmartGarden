@@ -9,6 +9,8 @@ import { useUser } from "../../../shared/context/UserContext";
 import UserModel from "../../../shared/models/UserModel";
 import SignInImage from "../../../../assets/images/SignInBackGround.svg";
 import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
+import { useTheme } from "../../../shared/context/ThemeContext";
+import "./Signup.module.scss";
 
 const Signup = () => {
   const [user, setUser] = useState<SignupRequest>({
@@ -16,7 +18,9 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const { theme, setTheme } = useTheme();
   const { setCurrentUser } = useUser();
+
   const navigate = useNavigate();
   const toast = useRef<Toast>(null);
 
@@ -59,7 +63,7 @@ const Signup = () => {
   return (
     <>
       <div className="d-flex justify-content-center min-vh-100 min-vw-100 vw-100 container m">
-        <div className="row m-auto">
+        <div className="row m-auto card-background">
           <div className="col d-flex rounded-start-4 p-0 shadow mw-25 mh-50">
             <img
               src={SignInImage}
@@ -67,21 +71,26 @@ const Signup = () => {
               className="w-100 h-100 object-fit-cover rounded-start-4"
             />
           </div>
-          <div className="col d-flex rounded-end-4 flex-column p-0  shadow">
+          <div className="col d-flex rounded-end-4 flex-column p-0 shadow">
             <div className="w-80 min-h-100 m-auto">
               <div className="d-flex flex-row pb-4">
                 <img src={SGLogo} alt="des" />
                 <h3>Smart Garden</h3>
               </div>
+              <Button
+                value="Sign up"
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              />
 
               <h2 className="text-2xl font-bold mt-4">Create an account</h2>
               <h6 className="">
                 Already have an account?{" "}
                 <span
+                  role="button"
                   className="text-success cursor-pointer"
                   onClick={() => navigate("/login")}
                 >
-                  Sign in
+                  Log in
                 </span>
               </h6>
               <form
@@ -114,7 +123,7 @@ const Signup = () => {
                 />
                 <Button
                   value="Sign up"
-                  label="Register"
+                  label="Sign up"
                   onClick={handleSubmit}
                   className="p-button"
                 />
