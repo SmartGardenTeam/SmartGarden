@@ -8,10 +8,8 @@ import { Button } from "primereact/button";
 import JwtService from "../../../shared/services/JwtService";
 import { useAuth } from "../../context/AuthContext";
 import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
-import SignInImage from "../../../../assets/images/SignInBackGround.svg";
 import { Checkbox } from "primereact/checkbox";
 import LoginImage from "../../../../assets/images/LoginAndSignup.svg";
-import { Card } from "primereact/card";
 
 const Login = () => {
   const { setAccessToken, setRefreshToken } = useAuth();
@@ -49,8 +47,8 @@ const Login = () => {
   return (
     <>
       <div className="d-flex justify-content-center min-vh-100 min-vw-100 vw-100 container m">
-        <div className="row m-auto card-background">
-          <div className="col d-flex rounded-start-4 flex-column p-0  shadow">
+        <div className="row m-auto card-background rounded-4">
+          <div className="col d-flex rounded-start-4 flex-column p-0 shadow">
             <div className="w-80 min-h-100 m-auto">
               <div className="d-flex mb-4">
                 <img src={SGLogo} alt="des" />
@@ -109,7 +107,7 @@ const Login = () => {
               </div>
             </div>
           </div>
-          <div className="col d-flex rounded-end-4 p-0 shadow mw-25 mh-50">
+          <div className="col d-flex p-0 shadow mw-25 mh-50 rounded-end-4">
             <img
               src={LoginImage}
               alt="des"

@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <>
       <div className={classes.footer}>
-        <p>© SmartGarden 2025</p>
+        <p className="m-0 text-center tertiary-color">© SmartGarden 2025</p>
       </div>
     </>
   );
