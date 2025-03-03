@@ -37,6 +37,12 @@ public class User implements UserDetails {
     @Column(name = "verification_expiration")
     private LocalDateTime verificationExpiresAt;
 
+    @Column()
+    private String passwordResetToken;
+
+    @Column()
+    private LocalDateTime passwordResetTokenExpiresAt;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Garden> gardens;
 

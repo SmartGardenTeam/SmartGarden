@@ -1,6 +1,7 @@
 package com.smartgarden.server.controller;
 
 import com.smartgarden.server.dto.LoginUserDto;
+import com.smartgarden.server.dto.PasswordDto;
 import com.smartgarden.server.dto.SignupUserDto;
 import com.smartgarden.server.dto.VerifyUserDto;
 import com.smartgarden.server.responses.auth.AuthenticationResponse;
@@ -46,5 +47,15 @@ public class AuthenticationController {
     @PostMapping("/refresh-token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
        authenticationService.refreshToken(request, response);
+    }
+
+    @PostMapping("/request-password-reset")
+    public ResponseEntity<Response<String>> requestPasswordReset(@RequestParam String email) {
+        return ResponseEntity.ok(authenticationService.requestPasswordReset(email));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Response<String>> resetPassword(@RequestParam String token, @RequestBody PasswordDto password) {
+        return ResponseEntity.ok(authenticationService.resetPassword(token, password.getPassword()));
     }
 }
