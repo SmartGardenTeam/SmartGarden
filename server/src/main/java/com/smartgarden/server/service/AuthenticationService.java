@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class AuthenticationService {
@@ -83,10 +80,8 @@ public class AuthenticationService {
         } catch (AuthenticationException e) {
             throw new RuntimeException("Authentication failed: " + e.getMessage(), e);
         }
-
         String jwtAccessToken = jwtService.generateAccessToken(user);
         String jwtRefreshToken = jwtService.generateRefreshToken(user);
-
         AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtAccessToken, jwtRefreshToken);
         response.setData(authenticationResponse);
 
@@ -137,7 +132,7 @@ public class AuthenticationService {
         }
     }
 
-    public Response<String> resendVerificationEmail(String email){
+    public Response<String> resendVerificationEmail(String email) {
         Response<String> response = new Response<>();
         Optional <User> optionalUser = userRepository.findByEmail(email);
         User user = optionalUser.get();
@@ -157,7 +152,7 @@ public class AuthenticationService {
         return response;
     }
 
-    public void sendVerificationEmail(User user){
+    public void sendVerificationEmail(User user) {
         String subject = "Account verification";
         String verificationCode = user.getVerificationCode();
         String htmlMessage = "<html>"
@@ -174,6 +169,66 @@ public class AuthenticationService {
                 + "</html>";
 
         emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+    }
+
+    public Response<String> requestPasswordReset(String email) {
+        Response<String> response = new Response<>();
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if(optionalUser.isEmpty()) {
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("User not found")));
+
+            return response;
+        }
+
+        User user = optionalUser.get();
+        String resetPasswordToken = UUID.randomUUID().toString();
+        user.setPasswordResetToken(resetPasswordToken);
+        user.setPasswordResetTokenExpiresAt(LocalDateTime.now().plusMinutes(15));
+        userRepository.save(user);
+
+        String resetLink = "https://localhost:5173/auth/reset-password?token=" + resetPasswordToken;
+        String subject = "Password reset request";
+        String htmlMessage = "<html><body>"
+                +"<h4>Click the link below to reset your password</h4>"
+                + "<p style=\"color: #333;\">" + resetLink + "</p>"
+                +"</body></html>";
+
+        emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
+
+        response.setData("Password reset request sent successful ");
+        return response;
+    }
+
+    public Response<String> resetPassword(String token, String password) {
+        Response<String> response = new Response<>();
+        Optional<User> optionalUser = userRepository.findByPasswordResetToken(token);
+
+        if(optionalUser.isEmpty()) {
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("User not found")));
+
+            return response;
+        }
+
+        User user = optionalUser.get();
+
+        if(user.getPasswordResetTokenExpiresAt().isBefore(LocalDateTime.now())) {
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("Password reset token has expired")));
+
+            return response;
+        }
+
+        String encodedpassword = passwordEncoder.encode(password);
+        user.setPassword(encodedpassword);
+        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenExpiresAt(null);
+        userRepository.save(user);
+
+        response.setData("Password reset token successful");
+        return response;
     }
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -202,9 +257,10 @@ public class AuthenticationService {
 
     }
 
-    private String generateVerificationCode(){
+    private String generateVerificationCode() {
         Random random = new Random();
         int code = random.nextInt(900000) + 100000;
+
         return String.valueOf(code);
     }
 }
