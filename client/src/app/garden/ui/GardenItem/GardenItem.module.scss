@@ -1,0 +1,22 @@
+.statsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .stats-container {
+    flex-direction: column;
+  }
+}
+
+.gardenItem {
+  min-height: 170px;
+}
+
+.img {
+  width: "23%";
+  height: auto;
+  max-height: "110%";
+  min-width: "150px";
+}

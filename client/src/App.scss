@@ -33,8 +33,16 @@
     border-left: 2px solid #383838;
   }
 
+  .stats-card-background {
+    background-color: #f3f7f8;
+  }
+
   .sidebar-box-shadow {
     box-shadow: 5px 2px 5px 1px #f5f4f4;
+  }
+
+  .gray-text-color {
+    color: #5a5a5a;
   }
 }
 
@@ -61,5 +69,13 @@
 
   .sidebar-box-shadow {
     box-shadow: 5px 2px 5px 1px #1f2425;
+  }
+
+  .stats-card-background {
+    background: #1f2326 !important;
+  }
+
+  .gray-text-color {
+    color: #bdbdbd;
   }
 }

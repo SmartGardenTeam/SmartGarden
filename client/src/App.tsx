@@ -3,15 +3,12 @@ import "./App.scss";
 import Layout from "./app/layouts/layout/Layout";
 import Login from "./app/auth/ui/login/Login";
 import Signup from "./app/auth/ui/signup/Signup";
-import Home from "./app/general/Home";
+import Home from "./app/general/Home/Home";
 import PageNotFound from "./app/general/PageNotFound";
-import HydroponicGardens from "./app/garden/HydroponicGardens";
-import HydroponicGarden from "./app/garden/HydroponicGarden";
+import Garden from "./app/garden/ui/Garden/Garden";
 import CodeConfirmationPage from "./app/auth/ui/code-confirmation-page/CodeConfirmationPage";
 import AuthGuard from "./app/auth/guards/AuthGuard";
 import UnauthGuard from "./app/auth/guards/UnauthGuard";
-import { useState } from "react";
-import PrimeReact from "primereact/api";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +18,6 @@ const router = createBrowserRouter([
         <Layout />
       </AuthGuard>
     ),
-    errorElement: <PageNotFound />,
     children: [
       {
         index: true,
@@ -29,12 +25,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "hydroponicGardens",
-        element: <HydroponicGardens />,
-      },
-      {
-        path: "hydroponicGardens/:hydroponicGardenId",
-        element: <HydroponicGarden />,
+        path: "hydroponicGardens/:gardenId",
+        element: <Garden />,
       },
     ],
   },
@@ -47,7 +39,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/confirm-code",
+    path: "/confirmCode",
     element: (
       <UnauthGuard>
         <CodeConfirmationPage />

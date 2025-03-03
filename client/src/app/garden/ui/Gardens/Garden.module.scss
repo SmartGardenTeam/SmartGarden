@@ -1,0 +1,6 @@
+.gardensContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(570px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}

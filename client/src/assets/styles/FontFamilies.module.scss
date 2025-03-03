@@ -14,9 +14,41 @@
   font-variation-settings: "wdth" 100;
 }
 
+.fredokaLightTitle {
+  font-family: "Fredoka", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  font-size: x-large;
+  font-variation-settings: "wdth" 100;
+}
+
 .montserratLightTitle {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
+}
+
+.montserratBoldTitle {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppinsRegular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: small;
+  font-style: normal;
+}
+
+.fredokaStatsText {
+  font-family: "Fredoka", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 450;
+  font-style: normal;
+  font-size: x-large;
+  font-variation-settings: "wdth" 100;
 }
