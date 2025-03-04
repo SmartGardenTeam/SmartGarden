@@ -1,7 +1,5 @@
-import { ChangeEvent, useRef, useState } from "react";
-import { InputText } from "primereact/inputtext";
+import { useRef, useState } from "react";
 import { Button } from "primereact/button";
-import { Card } from "primereact/card";
 import { Message } from "primereact/message";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/AuthService";
@@ -10,6 +8,7 @@ import { useUser } from "../../../shared/context/UserContext";
 import { Toast } from "primereact/toast";
 import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
 import { InputOtp, InputOtpChangeEvent } from "primereact/inputotp";
+import "./CodeConfirmationPage.scss";
 
 const CodeConfirmationPage = () => {
   const { currentUser } = useUser();
@@ -63,14 +62,9 @@ const CodeConfirmationPage = () => {
     <>
       <div className="d-flex vh-100 justify-content-center align-items-center scale">
         <div className="flex justify-content-center align-items-center min-h-screen">
-          <Card className="w-25rem">
+          <div className="w-25rem p-5 card-background shadow rounded-4">
             <div className="d-flex align-items-center">
-              <img
-                src={SGLogo}
-                alt="Logo"
-                className="me-2"
-                style={{ width: "40px", height: "40px" }}
-              />
+              <img src={SGLogo} alt="Logo" className="classes.logoSize me-2" />
               <h5 className="m-0">Confirm Your Code</h5>
             </div>
             <div className="p-fluid">
@@ -91,7 +85,7 @@ const CodeConfirmationPage = () => {
                 className="mt-3 w-full"
               />
             </div>
-          </Card>
+          </div>
         </div>
       </div>
       <Toast ref={toast} />
