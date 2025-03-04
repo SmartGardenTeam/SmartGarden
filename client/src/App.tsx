@@ -2,6 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.scss";
 import Layout from "./app/layouts/layout/Layout";
 import Login from "./app/auth/ui/login/Login";
+import ForgotPassword from "./app/auth/ui/forgot-password/ForgotPassword";
+import ResetPassword from "./app/auth/ui/reset-password/ResetPassword";
 import Signup from "./app/auth/ui/signup/Signup";
 import Home from "./app/general/Home/Home";
 import PageNotFound from "./app/general/PageNotFound";
@@ -51,6 +53,22 @@ const router = createBrowserRouter([
     element: (
       <UnauthGuard>
         <Login />
+      </UnauthGuard>
+    ),
+  },
+  {
+    path: "/forgot-password",
+    element: (
+      <UnauthGuard>
+        <ForgotPassword />
+      </UnauthGuard>
+    ),
+  },
+  {
+    path: "/reset-password",
+    element: (
+      <UnauthGuard>
+        <ResetPassword />
       </UnauthGuard>
     ),
   },

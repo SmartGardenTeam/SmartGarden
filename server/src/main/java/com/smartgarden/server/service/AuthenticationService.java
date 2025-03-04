@@ -188,7 +188,7 @@ public class AuthenticationService {
         user.setPasswordResetTokenExpiresAt(LocalDateTime.now().plusMinutes(15));
         userRepository.save(user);
 
-        String resetLink = "https://localhost:5173/auth/reset-password?token=" + resetPasswordToken;
+        String resetLink = "https://localhost:5173/reset-password?token=" + resetPasswordToken;
         String subject = "Password reset request";
         String htmlMessage = "<html><body>"
                 +"<h4>Click the link below to reset your password</h4>"

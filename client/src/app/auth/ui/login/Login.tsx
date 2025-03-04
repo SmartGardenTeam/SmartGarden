@@ -101,7 +101,11 @@ const Login = () => {
                     Remember me
                   </label>
                 </div>
-                <span className="text-success cursor-pointer" role="button">
+                <span
+                  className="text-success cursor-pointer"
+                  role="button"
+                  onClick={() => navigate("/forgot-password")}
+                >
                   Forgot password?
                 </span>
               </div>
