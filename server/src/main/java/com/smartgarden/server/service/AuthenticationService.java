@@ -259,7 +259,7 @@ public class AuthenticationService {
 
     private String generateVerificationCode() {
         Random random = new Random();
-        int code = random.nextInt(900000) + 100000;
+        int code = random.nextInt(100000,900000);
 
         return String.valueOf(code);
     }

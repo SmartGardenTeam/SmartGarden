@@ -9,11 +9,12 @@ import { VerifyEmailRequest } from "../../models/VerifyEmailRequest";
 import { useUser } from "../../../shared/context/UserContext";
 import { Toast } from "primereact/toast";
 import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
+import { InputOtp, InputOtpChangeEvent } from "primereact/inputotp";
 
 const CodeConfirmationPage = () => {
   const { currentUser } = useUser();
 
-  const [code, setCode] = useState<VerifyEmailRequest>({
+  const [token, setTokens] = useState<VerifyEmailRequest>({
     email: currentUser!.email,
     verificationCode: -1,
   });
@@ -27,7 +28,7 @@ const CodeConfirmationPage = () => {
     setError(null);
 
     try {
-      const response = await AuthService.verify(code);
+      const response = await AuthService.verify(token);
       if (response.success) {
         toast.current?.show({
           severity: "success",
@@ -52,10 +53,10 @@ const CodeConfirmationPage = () => {
     }
   };
 
-  const handleSetCode = (e: ChangeEvent<HTMLInputElement>) => {
-    setCode((prev) => ({
+  const handleSetCode = (e: InputOtpChangeEvent) => {
+    setTokens((prev) => ({
       ...prev,
-      verificationCode: Number(e.target.value),
+      verificationCode: e.value ? Number(e.value) : prev.verificationCode,
     }));
   };
   return (
@@ -74,11 +75,11 @@ const CodeConfirmationPage = () => {
             </div>
             <div className="p-fluid">
               <label htmlFor="code">Enter Code</label>
-              <InputText
-                id="code"
-                value={`${code.verificationCode}`}
+              <InputOtp
+                value={token.verificationCode}
                 onChange={handleSetCode}
-                className="w-full"
+                integerOnly
+                length={6}
               />
               {error && (
                 <Message severity="error" text={error} className="mt-2" />

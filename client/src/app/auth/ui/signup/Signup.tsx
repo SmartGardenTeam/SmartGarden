@@ -47,7 +47,7 @@ const Signup = () => {
         life: 3000,
       });
 
-      setTimeout(() => navigate("/confirm-code"), 1000);
+      setTimeout(() => navigate("/confirmCode"), 1000);
     } else {
       toast.current?.show({
         severity: "error",

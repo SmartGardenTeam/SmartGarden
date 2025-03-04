@@ -40,5 +40,5 @@ export const GARDENS = [
     moisture: 21,
     airTemp: 28,
     pHOfWater: 7.1,
-  },  
+  },
 ];
