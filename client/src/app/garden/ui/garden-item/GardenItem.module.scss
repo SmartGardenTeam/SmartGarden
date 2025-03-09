@@ -11,7 +11,12 @@
 }
 
 .gardenItem {
-  min-height: 170px;
+  min-height: 155px;
+  transition: scale 0.3s;
+}
+
+.gardenItem:hover {
+  scale: 1.02;
 }
 
 .img {

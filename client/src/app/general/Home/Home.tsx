@@ -1,5 +1,5 @@
-import Gardens from "../../garden/ui/Gardens/Gardens";
 import fonts from "../../../assets/styles/FontFamilies.module.scss";
+import Gardens from "../../garden/ui/gardens/Gardens";
 
 export default function Home() {
   const name = "User";

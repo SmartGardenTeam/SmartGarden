@@ -1,9 +1,9 @@
-import { GardenItemStatsProps } from "../../interfaces/GardenItemStatsProps";
 import phOfWaterImg from "../../../../assets/images/pHOfWater.svg";
 import moistureImg from "../../../../assets/images/moisture.svg";
 import airTempImg from "../../../../assets/images/airTemp.svg";
 import fonts from "../../../../assets/styles/FontFamilies.module.scss";
 import classes from "./GardenItemStats.module.scss";
+import { GardenItemStatsProps } from "../../interfaces/GardenItemStatsProps";
 
 const GardenItemStats = ({ type, value, sign }: GardenItemStatsProps) => {
   const images: Record<string, string> = {
@@ -17,7 +17,7 @@ const GardenItemStats = ({ type, value, sign }: GardenItemStatsProps) => {
       <img src={images[type] || airTempImg} alt={type} width={40} height={40} />
       <div className={`${classes.itemStats} d-flex flex-column ms-2`}>
         <div className={`${fonts.poppinsRegular} gray-text-color`}>{type}</div>
-        <div className={`${fonts.fredokaStatsText} mt-auto`}>
+        <div className={`${fonts.fredokaStatsText} mt-auto title-color`}>
           {value}
           {sign}
         </div>

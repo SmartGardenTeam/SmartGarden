@@ -57,7 +57,7 @@ public class GardenService {
         Response<GardenResponse> response = new Response<>();
 
         if(user == null) {
-           response.setErrors(new ArrayList<>(List.of("t")));
+           response.setErrors(new ArrayList<>(List.of("user does not exist")));
            response.setSuccess(false);
 
            return response;
