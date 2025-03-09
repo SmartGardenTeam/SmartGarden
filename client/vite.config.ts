@@ -8,8 +8,8 @@ export default defineConfig({
     host: "localhost",
     port: 5173,
     https: {
-      key: fs.readFileSync("localhost-key.pem"),
-      cert: fs.readFileSync("localhost-cert.pem"),
+      key: fs.readFileSync("cert-key.pem"),
+      cert: fs.readFileSync("fullchain.pem"),
     },
   },
 });

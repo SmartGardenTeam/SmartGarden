@@ -1,10 +1,10 @@
 import { GardenItemProps } from "../../interfaces/GardenItemProps";
 import { GardenItemStatsProps } from "../../interfaces/GardenItemStatsProps";
-import classes from "../GardenItem/GardenItem.module.scss";
-import GardenItemStats from "../GardenItemStats/GardenItemStats";
+import classes from "../garden-item/GardenItem.module.scss";
 import fonts from "../../../../assets/styles/FontFamilies.module.scss";
 import greenSalad from "../../../../assets/images/greenSalad.svg";
-
+import GardenItemStats from "../garden-item-stats/GardenItemStats";
+        
 const GardenItem = ({
   id,
   name,
@@ -21,10 +21,11 @@ const GardenItem = ({
   };
 
   return (
-    <div
-      className={`${classes.gardenItem} card-background rounded-4 sidebar-box-shadow p-3 lh-1 d-flex flex-column position-relative z-2 overflow-hidden`}
+    <a
+      href="#"
+      className={`${classes.gardenItem} card-background rounded-4 sidebar-box-shadow p-3 lh-1 d-flex flex-column position-relative z-2 overflow-hidden text-decoration-none pe-auto`}
     >
-      <div className={`${fonts.fredokaLightTitle}`}>{name}</div>
+      <div className={`${fonts.fredokaLightTitle} title-color`}>{name}</div>
       <div className={`${classes.statsContainer} mt-auto `}>
         <GardenItemStats
           {...({
@@ -53,7 +54,7 @@ const GardenItem = ({
         src={greenSalad}
         alt=""
       ></img>
-    </div>
+    </a>
   );
 };
 

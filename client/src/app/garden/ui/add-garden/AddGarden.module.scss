@@ -1,0 +1,19 @@
+.gardenItem {
+  height: 155px;
+  transition: scale 0.3s;
+}
+.gardenItem:hover {
+  scale: 1.02;
+}
+
+.img {
+  width: "23%";
+  height: auto;
+  max-height: "110%";
+  min-width: "150px";
+}
+
+
+.inp {
+  background: #0000002e;
+}

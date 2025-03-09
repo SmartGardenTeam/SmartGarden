@@ -33,6 +33,7 @@ public class UserService {
 
     public Response<Iterable<FindAllUsersResponse>> findAllUsers() {
         Response<Iterable<FindAllUsersResponse>> response = new Response<>();
+
         Iterable<FindAllUsersResponse> users = StreamSupport.stream(userRepository.findAll().spliterator(), false)
                 .map(user -> new FindAllUsersResponse(user.getId(), user.getUsername(), user.getEmail()))
                 .collect(Collectors.toList());

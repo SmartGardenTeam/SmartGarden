@@ -5,12 +5,13 @@ import Login from "./app/auth/ui/login/Login";
 import ForgotPassword from "./app/auth/ui/forgot-password/ForgotPassword";
 import ResetPassword from "./app/auth/ui/reset-password/ResetPassword";
 import Signup from "./app/auth/ui/signup/Signup";
-import Home from "./app/general/Home/Home";
+import Home from "./app/general/home/Home";
 import PageNotFound from "./app/general/PageNotFound";
-import Garden from "./app/garden/ui/Garden/Garden";
+import Garden from "./app/garden/ui/garden/Garden";
 import CodeConfirmationPage from "./app/auth/ui/code-confirmation-page/CodeConfirmationPage";
 import AuthGuard from "./app/auth/guards/AuthGuard";
 import UnauthGuard from "./app/auth/guards/UnauthGuard";
+import PlantAdministration from "./app/plant/ui/plant-administration/PlantAdministration";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "plant-administration",
+        element: <PlantAdministration />,
+      },
+      {
         path: "hydroponicGardens/:gardenId",
         element: <Garden />,
       },
@@ -41,7 +46,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/confirmCode",
+    path: "/confirm-code",
     element: (
       <UnauthGuard>
         <CodeConfirmationPage />
