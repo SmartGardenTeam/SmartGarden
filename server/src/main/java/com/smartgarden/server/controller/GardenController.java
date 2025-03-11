@@ -2,7 +2,7 @@ package com.smartgarden.server.controller;
 
 import com.smartgarden.server.dto.GardenDto;
 import com.smartgarden.server.responses.Response;
-import com.smartgarden.server.responses.garden.FindGardensByOwnerIdResponse;
+import com.smartgarden.server.responses.garden.FindGardenByIdResponse;
 import com.smartgarden.server.responses.garden.GardenResponse;
 import com.smartgarden.server.service.GardenService;
 import jakarta.validation.Valid;
@@ -19,8 +19,13 @@ public class GardenController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Response<Iterable<FindGardensByOwnerIdResponse>>> findGardensByOwnerId(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<Response<Iterable<FindGardenByIdResponse>>> findGardensByOwnerId(@RequestHeader("Authorization") String authHeader) {
         return ResponseEntity.ok(gardenService.findGardensByOwnerId(authHeader));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Response<FindGardenByIdResponse>> findGardenById(@RequestHeader("Authorization") String authHeader, @PathVariable("id") String id) {
+        return ResponseEntity.ok(gardenService.findGardenById(authHeader, id));
     }
 
     @PostMapping("/create")

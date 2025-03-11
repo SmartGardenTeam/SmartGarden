@@ -6,14 +6,14 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class FindGardenById {
+public class FindGardenByIdResponse {
     private long id;
     private String name;
     private String location;
     private OwnerResponse owner;
     private LocalDateTime creationDate;
 
-    public FindGardenById(long id, String name, String location, OwnerResponse owner, LocalDateTime creationDate) {
+    public FindGardenByIdResponse(long id, String name, String location, OwnerResponse owner, LocalDateTime creationDate) {
         this.id = id;
         this.name = name;
         this.location = location;
