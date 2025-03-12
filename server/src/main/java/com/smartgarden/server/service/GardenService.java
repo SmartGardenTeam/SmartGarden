@@ -53,6 +53,7 @@ public class GardenService {
         return response;
     }
 
+    @Transactional
     public Response<FindGardenByIdResponse> findGardenById(String authHeader, String id) {
         Response<FindGardenByIdResponse> response = new Response<>();
 

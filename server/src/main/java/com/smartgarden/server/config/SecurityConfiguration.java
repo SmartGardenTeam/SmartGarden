@@ -35,6 +35,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/users/**").authenticated()
                         .requestMatchers("/gardens/**").authenticated()
+                        .requestMatchers("/plants/**").authenticated()
+                        .requestMatchers("/plant-families/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

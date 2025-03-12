@@ -10,14 +10,16 @@ import AerationIcon from "../../../../assets/images/AerationIcon.svg";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import classes from "./Garden.module.scss";
-import { ProductService } from "./service/ProductService";
 import { InputText } from "primereact/inputtext";
+import { PlantModel } from "../../../plant/models/PlantModel";
+import PlantService from "../../../plant/services/PlantService";
+import PlantInfo from "../../../plant/ui/plant-info-card/PlantInfo";
 
 const Garden = () => {
   const toast = useRef<Toast>(null);
   const params = useParams();
   const [garden, SetGarden] = useState<GardenModel | null>(null);
-  const [products, setProducts] = useState([]);
+  const [plant, SetPlant] = useState<PlantModel | null>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: "contains" },
@@ -27,14 +29,25 @@ const Garden = () => {
     const fetchGarden = async () => {
       if (params.gardenId) {
         const response = await GardenService.findGardenById(params.gardenId);
+        const plantResponse = await PlantService.findPlantByGardenId(
+          params.gardenId
+        );
 
-        if (response.success) {
+        if (response.success && plantResponse.success) {
           SetGarden(response.data);
-        } else {
+          SetPlant(plantResponse.data);
+        } else if (!response.success) {
           toast.current?.show({
             severity: "error",
             summary: "Error",
             detail: response.errors[0],
+            life: 3000,
+          });
+        } else {
+          toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: plantResponse.errors[0],
             life: 3000,
           });
         }
@@ -71,7 +84,7 @@ const Garden = () => {
         </div>
         <div className="row gap-5 mb-4 p-2">
           <GardenInfo name={garden?.name} />
-          <GardenInfo name={garden?.name} />
+          <PlantInfo plant={plant} />
           <GardenControl
             img={LightIcon}
             title={"Lighting"}
@@ -105,7 +118,7 @@ const Garden = () => {
                 />
               </span>{" "}
               <DataTable
-                value={products}
+                //value={}
                 removableSort
                 tableStyle={{ minWidth: "50rem" }}
                 globalFilter={globalFilter}
