@@ -1,5 +1,6 @@
 package com.smartgarden.server.controller;
 
+import com.smartgarden.server.dto.CreateGardenDto;
 import com.smartgarden.server.dto.GardenDto;
 import com.smartgarden.server.responses.Response;
 import com.smartgarden.server.responses.garden.FindGardensByOwnerIdResponse;
@@ -7,7 +8,10 @@ import com.smartgarden.server.responses.garden.GardenResponse;
 import com.smartgarden.server.service.GardenService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.CompletableFuture;
 
 @RequestMapping("/gardens")
 @RestController
@@ -24,8 +28,8 @@ public class GardenController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Response<GardenResponse>> createGarden(@Valid @RequestBody GardenDto garden) {
-        return ResponseEntity.ok(gardenService.createGarden(garden));
+    public ResponseEntity<Response<GardenResponse>> createGarden(@Valid @RequestBody CreateGardenDto createGardenDto, @RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(gardenService.createGarden(createGardenDto, authHeader));
     }
 
     @DeleteMapping("/delete/{id}")

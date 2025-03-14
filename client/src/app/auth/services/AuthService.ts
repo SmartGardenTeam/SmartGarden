@@ -7,6 +7,7 @@ import { AuthModel } from "../models/AuthModel";
 import { ENVIRONMENT } from "../../../environments/environment";
 import { ForgotPasswordRequest } from "../models/ForgotPasswordRequest";
 import { ResetPasswordRequest } from "../models/ResetPasswordRequest";
+
 const API_URL = ENVIRONMENT.serverUrl + "auth/";
 
 const AuthService = {

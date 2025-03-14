@@ -1,17 +1,19 @@
 package com.smartgarden.server.service;
 
+import com.smartgarden.server.dto.CreateGardenDto;
 import com.smartgarden.server.dto.GardenDto;
 import com.smartgarden.server.model.Garden;
+import com.smartgarden.server.model.GardenPlant;
+import com.smartgarden.server.model.Plant;
 import com.smartgarden.server.model.User;
 import com.smartgarden.server.repository.GardenRepository;
+import com.smartgarden.server.repository.PlantRepository;
 import com.smartgarden.server.repository.UserRepository;
 import com.smartgarden.server.responses.Response;
 import com.smartgarden.server.responses.garden.FindGardensByOwnerIdResponse;
 import com.smartgarden.server.responses.garden.GardenResponse;
-import com.smartgarden.server.responses.garden.OwnerResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,11 +24,17 @@ public class GardenService {
     private final GardenRepository gardenRepository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final PlantRepository plantRepository;
+    private final GardenPlantService gardenPlantService;
+    private final MetricsService metricsService;
 
-    public GardenService(GardenRepository gardenRepository, UserRepository userRepository, JwtService jwtService) {
+    public GardenService(GardenRepository gardenRepository, UserRepository userRepository, JwtService jwtService, PlantRepository plantRepository, GardenPlantService gardenPlantService, MetricsService metricsService ) {
         this.gardenRepository = gardenRepository;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.plantRepository = plantRepository;
+        this.gardenPlantService = gardenPlantService;
+        this.metricsService = metricsService;
     }
 
     public Response<Iterable<FindGardensByOwnerIdResponse>> findGardensByOwnerId(String authHeader) {
@@ -45,27 +53,37 @@ public class GardenService {
         List<Garden> gardensList = gardenRepository.findByOwnerId(owner.getId()).orElse(Collections.emptyList());
 
         Iterable<FindGardensByOwnerIdResponse> gardens = gardensList.stream()
-                .map(garden -> new FindGardensByOwnerIdResponse(garden.getId(),garden.getName(),garden.getLocation(), new OwnerResponse(owner.getId(), owner.getUsername(), owner.getEmail()), garden.getCreationDate()))
+                .map(garden -> new FindGardensByOwnerIdResponse(garden.getId(),garden.getName(), metricsService.findGardenMetrics(garden.getId())))
                 .collect(Collectors.toList());
         response.setData(gardens);
 
         return response;
     }
 
-    public Response<GardenResponse> createGarden(GardenDto gardendto) {
-        User user = userRepository.findByUsername(gardendto.getOwner()).orElse(null);
+    public Response<GardenResponse> createGarden(CreateGardenDto createGardenDto, String authHeader) {
         Response<GardenResponse> response = new Response<>();
 
-        if(user == null) {
+        String token = authHeader.replace("Bearer ", "");
+        User owner = (userRepository.findByUsername(jwtService.extractUsername(token)).orElse(null));
+
+        if(owner == null) {
            response.setErrors(new ArrayList<>(List.of("user does not exist")));
            response.setSuccess(false);
 
            return response;
         }
 
-        Garden garden = new Garden(gardendto.getName(), gardendto.getLocation(), user);
-        garden.setCreationDate(LocalDateTime.now());
+        Garden garden = new Garden(createGardenDto.getName(), createGardenDto.getLocation(), owner);
         gardenRepository.save(garden);
+
+        Plant plant = plantRepository.findById(String.valueOf(createGardenDto.getPlantId())).orElse(null);
+        if (plant == null) {
+            response.setErrors(new ArrayList<>(List.of("Invalid plant ID")));
+            response.setSuccess(false);
+            return response;
+        }
+
+        gardenPlantService.createGardenPlant(new GardenPlant(plant, garden, createGardenDto.getQuantity()));
 
         response.setData(new GardenResponse(garden.getId(), "Garden created successfully"));
 

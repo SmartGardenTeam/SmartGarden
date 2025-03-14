@@ -1,7 +1,6 @@
+import { MetricsResponse } from "./../../metrics/models/MetricsResponse";
 export interface GardenItemProps {
-  id: string;
+  id: number;
   name: string;
-  moisture: number;
-  airTemp: number;
-  pHOfWater: number;
+  metricsResponse: MetricsResponse;
 }

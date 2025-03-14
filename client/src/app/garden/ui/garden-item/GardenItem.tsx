@@ -4,20 +4,12 @@ import classes from "../garden-item/GardenItem.module.scss";
 import fonts from "../../../../assets/styles/FontFamilies.module.scss";
 import greenSalad from "../../../../assets/images/greenSalad.svg";
 import GardenItemStats from "../garden-item-stats/GardenItemStats";
-        
-const GardenItem = ({
-  id,
-  name,
-  moisture,
-  airTemp,
-  pHOfWater,
-}: GardenItemProps) => {
+
+const GardenItem = ({ id, name, metricsResponse }: GardenItemProps) => {
   const gardenItemProps = {
     id,
     name,
-    moisture,
-    airTemp,
-    pHOfWater,
+    metricsResponse: metricsResponse,
   };
 
   return (
@@ -30,21 +22,21 @@ const GardenItem = ({
         <GardenItemStats
           {...({
             type: "moisture",
-            value: gardenItemProps.moisture,
+            value: gardenItemProps.metricsResponse.moisture,
             sign: "%",
           } as GardenItemStatsProps)}
         ></GardenItemStats>
         <GardenItemStats
           {...({
             type: "air temp.",
-            value: gardenItemProps.moisture,
+            value: gardenItemProps.metricsResponse.airTemperature,
             sign: "°C",
           } as GardenItemStatsProps)}
         ></GardenItemStats>
         <GardenItemStats
           {...({
             type: "pH of water",
-            value: gardenItemProps.moisture,
+            value: gardenItemProps.metricsResponse.phofWater,
             sign: "pH",
           } as GardenItemStatsProps)}
         ></GardenItemStats>
