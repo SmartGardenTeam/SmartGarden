@@ -39,6 +39,7 @@ public class Garden {
         this.name = name;
         this.location = location;
         this.owner = owner;
+        this.creationDate = LocalDateTime.now();
     }
 
     public Garden() {
