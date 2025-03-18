@@ -33,7 +33,7 @@ public class PlantService {
     }
 
     @Transactional
-    public Response<PlantResponse> findPlantsByGardenId(String id) {
+    public Response<PlantResponse> findPlantByGardenId(String id) {
         Response<PlantResponse> response = new Response<>();
         Plant plant = plantRepository.findByGardenId(Long.parseLong(id)).orElse(null);
 

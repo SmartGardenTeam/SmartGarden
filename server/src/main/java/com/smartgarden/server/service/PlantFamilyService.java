@@ -5,11 +5,9 @@ import com.smartgarden.server.model.PlantFamily;
 import com.smartgarden.server.repository.PlantFamilyRepository;
 import com.smartgarden.server.responses.Response;
 import com.smartgarden.server.responses.plantFamily.FindAllPlantFamiliesResponse;
-import com.smartgarden.server.responses.user.FindAllUsersResponse;
 import org.springframework.stereotype.Service;
-
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
 
 @Service
 public class PlantFamilyService {

@@ -27,7 +27,6 @@ public class PlantController {
 
     @GetMapping("/garden/{id}")
     public ResponseEntity<Response<PlantResponse>> getPlantsByGardenId(@PathVariable String id) {
-        System.out.println("pozvala se ruta");
-        return ResponseEntity.ok(plantService.findPlantsByGardenId(id));
+        return ResponseEntity.ok(plantService.findPlantByGardenId(id));
     }
 }

@@ -14,6 +14,7 @@ import { InputText } from "primereact/inputtext";
 import { PlantModel } from "../../../plant/models/PlantModel";
 import PlantService from "../../../plant/services/PlantService";
 import PlantInfo from "../../../plant/ui/plant-info-card/PlantInfo";
+import BreadCrumbs from "../bread-crumbs/BreadCrumbs";
 
 const Garden = () => {
   const toast = useRef<Toast>(null);
@@ -80,7 +81,10 @@ const Garden = () => {
         className={`${classes.width} ${classes.color} container   p-2 ps-4 pe-4`}
       >
         <div className="row mb-2 p-2">
-          <h4>Crumbs</h4>
+          {!garden && !plant}
+          {garden && plant && (
+            <BreadCrumbs GardenName={garden.name} PlantName={plant.name} />
+          )}
         </div>
         <div className="row gap-5 mb-4 p-2">
           <GardenInfo name={garden?.name} />
