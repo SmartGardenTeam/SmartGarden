@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FindGardensByOwnerIdResponse {
+public class FindGardenByIdResponse {
     private long id;
     private String name;
     private MetricsResponse metricsResponse;

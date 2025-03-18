@@ -10,13 +10,14 @@ import com.smartgarden.server.repository.GardenRepository;
 import com.smartgarden.server.repository.PlantRepository;
 import com.smartgarden.server.repository.UserRepository;
 import com.smartgarden.server.responses.Response;
-import com.smartgarden.server.responses.garden.FindGardensByOwnerIdResponse;
+import com.smartgarden.server.responses.garden.FindGardenByIdResponse;
 import com.smartgarden.server.responses.garden.GardenResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +38,8 @@ public class GardenService {
         this.metricsService = metricsService;
     }
 
-    public Response<Iterable<FindGardensByOwnerIdResponse>> findGardensByOwnerId(String authHeader) {
-        Response<Iterable<FindGardensByOwnerIdResponse>> response = new Response<>();
+    public Response<Iterable<FindGardenByIdResponse>> findGardensByOwnerId(String authHeader) {
+        Response<Iterable<FindGardenByIdResponse>> response = new Response<>();
 
         String token = authHeader.replace("Bearer ", "");
         User owner = (userRepository.findByUsername(jwtService.extractUsername(token)).orElse(null));
@@ -60,7 +61,42 @@ public class GardenService {
         return response;
     }
 
-    public Response<GardenResponse> createGarden(CreateGardenDto createGardenDto, String authHeader) {
+    @Transactional
+    public Response<FindGardenByIdResponse> findGardenById(String authHeader, String id) {
+        Response<FindGardenByIdResponse> response = new Response<>();
+
+        String token = authHeader.replace("Bearer ", "");
+        User owner = (userRepository.findByUsername(jwtService.extractUsername(token)).orElse(null));
+        Garden garden = gardenRepository.findById(Long.parseLong(id)).orElse(null);
+
+        if(garden == null) {
+            response.setErrors(new ArrayList<>(List.of("garden does not exist")));
+            response.setSuccess(false);
+
+            return response;
+        }
+
+        if(owner == null) {
+            response.setErrors(new ArrayList<>(List.of("user does not exist")));
+            response.setSuccess(false);
+
+            return response;
+        }
+
+        if(!Objects.equals(owner.getId(), garden.getOwner().getId())) {
+            response.setErrors(new ArrayList<>(List.of("garden owner id mismatch")));
+            response.setSuccess(false);
+
+            return response;
+        }
+
+        response.setData(new FindGardenByIdResponse(garden.getId(), garden.getName(), garden.getLocation(), new OwnerResponse(owner.getId(), owner.getUsername(), owner.getEmail()), garden.getCreationDate()));
+
+        return response;
+    }
+
+    public Response<GardenResponse> createGarden(GardenDto gardendto) {
+        User user = userRepository.findByUsername(gardendto.getOwner()).orElse(null);
         Response<GardenResponse> response = new Response<>();
 
         String token = authHeader.replace("Bearer ", "");

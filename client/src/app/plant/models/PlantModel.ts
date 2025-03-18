@@ -9,4 +9,5 @@ export interface PlantModel {
   finalHarvest: string;
   growingSeason: string;
   averageMonthlyYield: string;
+  plantFamily: string;
 }

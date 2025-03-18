@@ -7,7 +7,7 @@ import ResetPassword from "./app/auth/ui/reset-password/ResetPassword";
 import Signup from "./app/auth/ui/signup/Signup";
 import Home from "./app/general/home/Home";
 import PageNotFound from "./app/general/PageNotFound";
-import Garden from "./app/garden/ui/garden/Garden";
+import Garden from "./app/garden/ui/Garden/Garden";
 import CodeConfirmationPage from "./app/auth/ui/code-confirmation-page/CodeConfirmationPage";
 import AuthGuard from "./app/auth/guards/AuthGuard";
 import UnauthGuard from "./app/auth/guards/UnauthGuard";
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         element: <PlantAdministration />,
       },
       {
-        path: "hydroponicGardens/:gardenId",
+        path: "gardens/:gardenId",
         element: <Garden />,
       },
     ],
