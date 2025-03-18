@@ -8,7 +8,6 @@ import com.smartgarden.server.responses.plantFamily.FindAllPlantFamiliesResponse
 import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
-
 @Service
 public class PlantFamilyService {
     private final PlantFamilyRepository plantFamilyRepository;

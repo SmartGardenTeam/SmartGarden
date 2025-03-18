@@ -5,8 +5,9 @@ import com.smartgarden.server.repository.PlantRepository;
 import com.smartgarden.server.responses.Response;
 import com.smartgarden.server.responses.plant.PlantResponse;
 import jakarta.transaction.Transactional;
+import com.smartgarden.server.responses.plant.FindPlantsByPlantFamilyIdResponse;
 import org.springframework.stereotype.Service;
-
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,15 @@ public class PlantService {
         }
 
         response.setData(new PlantResponse(plant.getPlantFamily().getName(), plant.getName(), plant.getDescription(), plant.getTips(), plant.getHarvestMethod(), plant.getFirstHarvest(), plant.getFinalHarvest(), plant.getGrowingSeason(), plant.getAverageMonthlyYield()));
+    public Response<Iterable<FindPlantsByPlantFamilyIdResponse>> findPlantsByPlantFamilyId(Long plantFamilyId) {
+        Response<Iterable<FindPlantsByPlantFamilyIdResponse>> response = new Response<>();
+
+        List<Plant> plantList = plantRepository.findAllByPlantFamilyId(plantFamilyId).orElse(Collections.emptyList());
+
+        Iterable<FindPlantsByPlantFamilyIdResponse> plants = plantList.stream()
+                .map(plant -> new FindPlantsByPlantFamilyIdResponse(plant.getId(),plant.getName()))
+                .collect(Collectors.toList());
+        response.setData(plants);
 
         return response;
     }

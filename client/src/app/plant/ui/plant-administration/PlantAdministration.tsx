@@ -10,8 +10,8 @@ import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { InputText } from "primereact/inputtext";
-import { PlantFamilytRequest } from "../../models/PlantFamilyRequest";
-import PlantFamilyService from "../../services/PlantFamilyService";
+import { PlantFamilytRequest } from "../../../plant-family/models/PlantFamilyRequest";
+import PlantFamilyService from "../../../plant-family/services/PlantFamilyService";
 
 const PlantAdministration = () => {
   const [visible, setVisible] = useState(false);
