@@ -26,7 +26,7 @@ public class PlantService {
         List<Plant> plants = plantRepository.findAll();
 
         List<PlantResponse> plantsResponses = plants.stream()
-                .map(plant -> new PlantResponse(plant.getPlantFamily().getName(),plant.getName(), plant.getDescription(), plant.getTips(), plant.getHarvestMethod(), plant.getFirstHarvest(), plant.getFinalHarvest(), plant.getGrowingSeason(), plant.getAverageMonthlyYield()))
+                .map(plant -> new PlantResponse(plant.getPlantFamily().getName(), plant.getName(), plant.getDescription(), plant.getTips(), plant.getHarvestMethod(), plant.getFirstHarvest(), plant.getFinalHarvest(), plant.getGrowingSeason(), plant.getAverageMonthlyYield()))
                 .collect(Collectors.toList());
         response.setData(plantsResponses);
 
@@ -46,13 +46,17 @@ public class PlantService {
         }
 
         response.setData(new PlantResponse(plant.getPlantFamily().getName(), plant.getName(), plant.getDescription(), plant.getTips(), plant.getHarvestMethod(), plant.getFirstHarvest(), plant.getFinalHarvest(), plant.getGrowingSeason(), plant.getAverageMonthlyYield()));
+
+        return response;
+    }
+
     public Response<Iterable<FindPlantsByPlantFamilyIdResponse>> findPlantsByPlantFamilyId(Long plantFamilyId) {
         Response<Iterable<FindPlantsByPlantFamilyIdResponse>> response = new Response<>();
 
         List<Plant> plantList = plantRepository.findAllByPlantFamilyId(plantFamilyId).orElse(Collections.emptyList());
 
         Iterable<FindPlantsByPlantFamilyIdResponse> plants = plantList.stream()
-                .map(plant -> new FindPlantsByPlantFamilyIdResponse(plant.getId(),plant.getName()))
+                .map(plant -> new FindPlantsByPlantFamilyIdResponse(plant.getId(), plant.getName()))
                 .collect(Collectors.toList());
         response.setData(plants);
 

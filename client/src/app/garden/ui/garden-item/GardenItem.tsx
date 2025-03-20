@@ -12,7 +12,7 @@ const GardenItem = ({ id, name, metricsResponse }: GardenItemProps) => {
     metricsResponse: metricsResponse,
   };
 
-  return (
+  return gardenItemProps.metricsResponse ? (
     <a
       href="#"
       className={`${classes.gardenItem} card-background rounded-4 sidebar-box-shadow p-3 lh-1 d-flex flex-column position-relative z-2 overflow-hidden text-decoration-none pe-auto`}
@@ -47,6 +47,8 @@ const GardenItem = ({ id, name, metricsResponse }: GardenItemProps) => {
         alt=""
       ></img>
     </a>
+  ) : (
+    <p>No data inside gardenItemProps.metricsResponse</p>
   );
 };
 
