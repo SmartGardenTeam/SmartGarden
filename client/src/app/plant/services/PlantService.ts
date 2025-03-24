@@ -4,7 +4,7 @@ import { Response } from "../../shared/models/Response";
 import { PlantModel } from "../models/PlantModel";
 import { FindAllPlantsByPlantFamilyIdResponse } from "../interfaces/FindPlantsByPlantFamilyIdResponse";
 
-const API_URL = ENVIRONMENT.serverUrl + "plants/";
+const API_URL = ENVIRONMENT.SERVER_URL + "plants/";
 
 const PlantService = {
   findPlantByGardenId: async function (

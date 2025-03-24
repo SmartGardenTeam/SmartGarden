@@ -4,6 +4,7 @@ import classes from "../garden-item/GardenItem.module.scss";
 import fonts from "../../../../assets/styles/FontFamilies.module.scss";
 import greenSalad from "../../../../assets/images/greenSalad.svg";
 import GardenItemStats from "../garden-item-stats/GardenItemStats";
+import { Link } from "react-router-dom";
 
 const GardenItem = ({ id, name, metricsResponse }: GardenItemProps) => {
   const gardenItemProps = {
@@ -13,8 +14,8 @@ const GardenItem = ({ id, name, metricsResponse }: GardenItemProps) => {
   };
 
   return gardenItemProps.metricsResponse ? (
-    <a
-      href="#"
+    <Link
+      to={`/gardens/${gardenItemProps.id}`}
       className={`${classes.gardenItem} card-background rounded-4 sidebar-box-shadow p-3 lh-1 d-flex flex-column position-relative z-2 overflow-hidden text-decoration-none pe-auto`}
     >
       <div className={`${fonts.fredokaLightTitle} title-color`}>{name}</div>
@@ -46,7 +47,7 @@ const GardenItem = ({ id, name, metricsResponse }: GardenItemProps) => {
         src={greenSalad}
         alt=""
       ></img>
-    </a>
+    </Link>
   ) : (
     <p>No data inside gardenItemProps.metricsResponse</p>
   );

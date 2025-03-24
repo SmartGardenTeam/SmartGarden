@@ -1,11 +1,9 @@
 package com.smartgarden.server.controller;
 
-import com.smartgarden.server.dto.LoginUserDto;
-import com.smartgarden.server.dto.PasswordDto;
-import com.smartgarden.server.dto.SignupUserDto;
-import com.smartgarden.server.dto.VerifyUserDto;
+import com.smartgarden.server.dto.*;
 import com.smartgarden.server.responses.auth.AuthenticationResponse;
 import com.smartgarden.server.responses.Response;
+import com.smartgarden.server.responses.auth.LoginResponse;
 import com.smartgarden.server.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,7 +28,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response<AuthenticationResponse>> authenticate(@Valid @RequestBody LoginUserDto loginUserDto) {
+    public ResponseEntity<Response<LoginResponse>> authenticate(@Valid @RequestBody LoginUserDto loginUserDto) {
         return ResponseEntity.ok(authenticationService.authenticate(loginUserDto));
     }
 
@@ -45,8 +43,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh-token")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       authenticationService.refreshToken(request, response);
+    public ResponseEntity<Response<AuthenticationResponse>> refreshToken(@RequestBody RefreshTokenDto request) {
+        System.out.println(request);
+        return ResponseEntity.ok(authenticationService.refreshToken(request.getRefreshToken()));
     }
 
     @PostMapping("/forgot-password")

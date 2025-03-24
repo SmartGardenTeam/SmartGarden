@@ -8,15 +8,20 @@ import com.smartgarden.server.model.User;
 import com.smartgarden.server.repository.UserRepository;
 import com.smartgarden.server.responses.auth.AuthenticationResponse;
 import com.smartgarden.server.responses.Response;
+import com.smartgarden.server.responses.auth.LoginResponse;
+import com.smartgarden.server.responses.user.UserResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -52,8 +57,8 @@ public class AuthenticationService {
         return response;
     }
 
-    public Response<AuthenticationResponse> authenticate(LoginUserDto input) {
-        Response<AuthenticationResponse> response = new Response<>();
+    public Response<LoginResponse> authenticate(LoginUserDto input) {
+        Response<LoginResponse> response = new Response<>();
         User user = userRepository.findByEmail(input.getEmail()).orElse(null);
 
         if(user == null) {
@@ -83,7 +88,10 @@ public class AuthenticationService {
         String jwtAccessToken = jwtService.generateAccessToken(user);
         String jwtRefreshToken = jwtService.generateRefreshToken(user);
         AuthenticationResponse authenticationResponse = new AuthenticationResponse(jwtAccessToken, jwtRefreshToken);
-        response.setData(authenticationResponse);
+        UserResponse userResponse = new UserResponse(user.getId(), user.getUsername(), user.getEmail());
+
+        LoginResponse loginResponse = new LoginResponse(authenticationResponse, userResponse);
+        response.setData(loginResponse);
 
         return response;
     }
@@ -231,30 +239,33 @@ public class AuthenticationService {
         return response;
     }
 
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
+    public Response<AuthenticationResponse> refreshToken(String refreshToken) {
+        Response<AuthenticationResponse> response = new Response<>();
+
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("Refresh token is missing")));
         }
 
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if(userEmail != null) {
-            UserDetails userDetails = this.userRepository.findByEmail(userEmail)
-                    .orElseThrow();
-            if(jwtService.validateToken(refreshToken, userDetails)) {
-                var accessToken = jwtService.generateAccessToken(userDetails);
-                var authResponse = AuthenticationResponse.builder()
-                        .jwtAccessToken(accessToken)
-                        .jwtRefreshToken(refreshToken)
-                        .build();
-
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            }
+        String username = jwtService.extractUsername(refreshToken);
+        if (username == null) {
+            response.setSuccess(Boolean.FALSE);
+            response.setErrors(new ArrayList<>(List.of("Invalid refresh token")));
         }
 
+        UserDetails userDetails = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!jwtService.validateToken(refreshToken, userDetails)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid refresh token2");
+        }
+
+        String accessToken = jwtService.generateAccessToken(userDetails);
+
+        AuthenticationResponse authenticationResponse = new AuthenticationResponse(refreshToken, accessToken);
+        response.setData(authenticationResponse);
+
+        return response;
     }
 
     private String generateVerificationCode() {

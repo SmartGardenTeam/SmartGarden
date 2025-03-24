@@ -4,7 +4,7 @@ import { api } from "../../auth/interceptors/JwtInterceptor";
 import { Response } from "../../shared/models/Response";
 import { FindAllPlantFamiliesResponse } from "../models/FindAllPlantFamiliesResponse";
 
-const API_URL = ENVIRONMENT.serverUrl + "plant-families/";
+const API_URL = ENVIRONMENT.SERVER_URL + "plant-families/";
 
 const PlantFamilyService = {
   findAllPlantFamilies: async function (): Promise<

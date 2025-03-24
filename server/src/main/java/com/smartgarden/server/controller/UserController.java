@@ -2,7 +2,7 @@ package com.smartgarden.server.controller;
 
 import com.smartgarden.server.responses.Response;
 import com.smartgarden.server.responses.user.AuthenticatedUserResponse;
-import com.smartgarden.server.responses.user.FindAllUsersResponse;
+import com.smartgarden.server.responses.user.UserResponse;
 import com.smartgarden.server.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Response<Iterable<FindAllUsersResponse>>> findAllUsers() {
+    public ResponseEntity<Response<Iterable<UserResponse>>> findAllUsers() {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 }
