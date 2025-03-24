@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { api } from "../interceptors/JwtInterceptor";
-import { AuthContextType } from "../interfaces/AuthContextType";
 import JwtService from "../../shared/services/JwtService";
 import {
   JWT_ACCESS_TOKEN,
   JWT_REFRESH_TOKEN,
 } from "../constants/TokenConstants";
+import { AuthContextType } from "../interfaces/AuthContextType";
+import { ENVIRONMENT } from "../../../environments/environment";
+import axios from "axios";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -19,15 +20,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (accessToken) {
+      console.log("Setting new access token in localStorage:", accessToken);
       JwtService.setAccessToken(accessToken);
-    } else {
-      JwtService.removeToken(JWT_ACCESS_TOKEN);
     }
 
     if (refreshToken) {
+      console.log("Setting new refresh token in localStorage:", refreshToken);
       JwtService.setRefreshToken(refreshToken);
-    } else {
-      JwtService.removeToken(JWT_REFRESH_TOKEN);
     }
   }, [accessToken, refreshToken]);
 
@@ -37,17 +36,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!refreshToken) return false;
 
     try {
-      const response = await api.post("/auth/refresh-token", {
-        refreshToken,
-      });
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-        response.data;
+      const response = await axios.post(
+        ENVIRONMENT.SERVER_URL + "auth/refresh-token",
+        {
+          refreshToken: JwtService.getToken(JWT_REFRESH_TOKEN),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const newAccessToken = response.data.data.jwtAccessToken;
+      const newRefreshToken = response.data.data.jwtRefreshToken;
+
+      JwtService.setAccessToken(newAccessToken);
+      JwtService.setRefreshToken(newRefreshToken);
 
       setAccessToken(newAccessToken);
       setRefreshToken(newRefreshToken);
 
       return true;
-    } catch (error) {
+    } catch {
+      console.log("not here");
       setAccessToken(null);
       setRefreshToken(null);
       return false;

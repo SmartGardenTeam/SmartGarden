@@ -5,7 +5,7 @@ import { CreateGardenRequest } from "../models/CreateGardenRequest";
 import { FindGardensByOwnerId } from "../models/FindGardensByOwnerId";
 import { GardenModel } from "../models/GardenModel";
 
-const API_URL = ENVIRONMENT.serverUrl + "gardens/";
+const API_URL = ENVIRONMENT.SERVER_URL + "gardens/";
 
 const GardenService = {
   findGardensByOwnerId: async function (): Promise<

@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import "./App.scss";
 import Layout from "./app/layouts/layout/Layout";
 import Login from "./app/auth/ui/login/Login";
@@ -6,8 +10,7 @@ import ForgotPassword from "./app/auth/ui/forgot-password/ForgotPassword";
 import ResetPassword from "./app/auth/ui/reset-password/ResetPassword";
 import Signup from "./app/auth/ui/signup/Signup";
 import Home from "./app/general/home/Home";
-import PageNotFound from "./app/general/PageNotFound";
-import Garden from "./app/garden/ui/Garden/Garden";
+import Garden from "./app/garden/ui/garden/Garden";
 import CodeConfirmationPage from "./app/auth/ui/code-confirmation-page/CodeConfirmationPage";
 import AuthGuard from "./app/auth/guards/AuthGuard";
 import UnauthGuard from "./app/auth/guards/UnauthGuard";
@@ -24,6 +27,9 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Home />,
+      },
+      {
         path: "home",
         element: <Home />,
       },
@@ -34,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "gardens/:gardenId",
         element: <Garden />,
+      },
+      {
+        path: "*",
+        element: <Navigate to="/home" replace />,
       },
     ],
   },
@@ -79,7 +89,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <PageNotFound />,
+    element: <Navigate to="/login" replace />,
   },
 ]);
 

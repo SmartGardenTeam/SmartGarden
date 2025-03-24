@@ -5,14 +5,17 @@ import { NavLink } from "react-router-dom";
 import Logo from "../../../assets/images/SmartGardenLogo.svg";
 import { useTheme } from "../../shared/context/ThemeContext";
 import { SelectButton } from "primereact/selectbutton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { FindGardensByOwnerId } from "../../garden/models/FindGardensByOwnerId";
+import GardenService from "../../garden/services/GardenService";
 
 export default function Sidebar() {
   const { theme, setTheme } = useTheme();
   const [value, setValue] = useState(theme);
+  const [gardens, setGardens] = useState<FindGardensByOwnerId[]>([]);
 
   const iconOptions = [
     { icon: faSun, value: "light" },
@@ -23,10 +26,38 @@ export default function Sidebar() {
     return <FontAwesomeIcon icon={option.icon}></FontAwesomeIcon>;
   };
 
-  function handleSelect(value: any): void {
-    setTheme(theme === "light" ? "dark" : "light");
-    setValue(value);
-  }
+  const handleSelect = (newValue: any) => {
+    if (newValue !== null) {
+      setTheme(theme === "light" ? "dark" : "light");
+      setValue(newValue);
+    }
+  };
+
+  useEffect(() => {
+    const fetchGardens = async () => {
+      const response = await GardenService.findGardensByOwnerId();
+      if (response && response.success) {
+        setGardens(response.data);
+      }
+    };
+
+    fetchGardens();
+  }, []);
+
+  const updatedSidebarItems = SidebarItemsList.map((item) => {
+    if (item.label === "Gardens") {
+      return {
+        ...item,
+        subList: gardens.map((garden) => ({
+          icon: "",
+          label: garden.name,
+          link: `/gardens/${garden.id}`,
+          subList: [],
+        })),
+      };
+    }
+    return item;
+  });
 
   return (
     <div
@@ -43,7 +74,7 @@ export default function Sidebar() {
       </NavLink>
       <nav className="d-flex flex-column w-100 mt-4">
         <ul className="list-unstyled">
-          {SidebarItemsList.map((item) => (
+          {updatedSidebarItems.map((item) => (
             <SidebarItem key={item.label} {...item} />
           ))}
         </ul>

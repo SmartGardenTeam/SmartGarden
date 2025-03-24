@@ -7,8 +7,9 @@ import { AuthModel } from "../models/AuthModel";
 import { ENVIRONMENT } from "../../../environments/environment";
 import { ForgotPasswordRequest } from "../models/ForgotPasswordRequest";
 import { ResetPasswordRequest } from "../models/ResetPasswordRequest";
+import { LoginModel } from "../models/LoginModel";
 
-const API_URL = ENVIRONMENT.serverUrl + "auth/";
+const API_URL = ENVIRONMENT.SERVER_URL + "auth/";
 
 const AuthService = {
   signup: async function (
@@ -19,7 +20,7 @@ const AuthService = {
 
   login: async function (
     loginRequest: LoginRequest
-  ): Promise<Response<AuthModel>> {
+  ): Promise<Response<LoginModel>> {
     return api.post(API_URL + "login", loginRequest);
   },
 

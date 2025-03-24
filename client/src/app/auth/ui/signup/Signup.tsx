@@ -10,6 +10,7 @@ import UserModel from "../../../shared/models/UserModel";
 import SignInImage from "../../../../assets/images/LoginAndSignup.svg";
 import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
 import "./Signup.module.scss";
+import { Password } from "primereact/password";
 
 const Signup = () => {
   const [user, setUser] = useState<SignupRequest>({
@@ -60,7 +61,7 @@ const Signup = () => {
 
   return (
     <>
-      <div className="d-flex justify-content-center min-vh-100 min-vw-100 vw-100 container m">
+      <div className="d-flex justify-content-center min-vh-100 min-vw-100 vw-100 container auth">
         <div className="row m-auto card-background rounded-4">
           <div className="col d-flex rounded-start-4 p-0 shadow mw-25 mh-50">
             <img
@@ -106,13 +107,15 @@ const Signup = () => {
                   onChange={handleChange}
                   required
                 />
-                <InputText
+
+                <Password
                   type="password"
                   name="password"
                   placeholder="Password"
                   value={user.password}
                   onChange={handleChange}
                   required
+                  toggleMask
                 />
                 <Button
                   value="Sign up"

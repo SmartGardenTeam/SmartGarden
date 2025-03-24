@@ -4,7 +4,7 @@ import com.smartgarden.server.model.User;
 import com.smartgarden.server.repository.UserRepository;
 import com.smartgarden.server.responses.Response;
 import com.smartgarden.server.responses.user.AuthenticatedUserResponse;
-import com.smartgarden.server.responses.user.FindAllUsersResponse;
+import com.smartgarden.server.responses.user.UserResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,11 +31,11 @@ public class UserService {
         return response;
     }
 
-    public Response<Iterable<FindAllUsersResponse>> findAllUsers() {
-        Response<Iterable<FindAllUsersResponse>> response = new Response<>();
+    public Response<Iterable<UserResponse>> findAllUsers() {
+        Response<Iterable<UserResponse>> response = new Response<>();
 
-        Iterable<FindAllUsersResponse> users = StreamSupport.stream(userRepository.findAll().spliterator(), false)
-                .map(user -> new FindAllUsersResponse(user.getId(), user.getUsername(), user.getEmail()))
+        Iterable<UserResponse> users = StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail()))
                 .collect(Collectors.toList());
         response.setData(users);
 

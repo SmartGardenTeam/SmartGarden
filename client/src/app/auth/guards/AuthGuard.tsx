@@ -8,20 +8,34 @@ const AuthGuard = ({ children }: { children: JSX.Element }) => {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
 
   const checkAuth = useCallback(async () => {
-    if (accessToken && isTokenExpired()) {
-      await refreshAuthToken();
+    if (isTokenExpired()) {
+      console.log("Token expired, attempting refresh...");
+      const refreshed = await refreshAuthToken();
+      if (!refreshed) {
+        console.log("Token refresh failed, logging out...");
+        setIsAuthenticating(false);
+        return;
+      }
     }
     setIsAuthenticating(false);
-  }, [accessToken, isTokenExpired, refreshAuthToken]);
+  }, [refreshAuthToken]);
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    if (!accessToken || isTokenExpired()) {
+      checkAuth();
+    } else {
+      setIsAuthenticating(false);
+    }
+  }, [accessToken, checkAuth]);
 
   if (isAuthenticating) return <div>Loading...</div>;
 
   if (!accessToken || isTokenExpired()) {
     return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (location.pathname === "/") {
+    return <Navigate to="/home" replace />;
   }
 
   return children;

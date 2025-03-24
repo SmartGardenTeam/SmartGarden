@@ -79,3 +79,15 @@
     color: #bdbdbd;
   }
 }
+
+.auth svg {
+  vertical-align: super !important;
+}
+
+.p-icon-field {
+  width: 100% !important;
+
+  .p-password-input {
+    width: 100% !important;
+  }
+}
