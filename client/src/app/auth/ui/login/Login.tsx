@@ -18,6 +18,7 @@ import { useUser } from "../../../shared/context/UserContext";
 const Login = () => {
   const { setAccessToken, setRefreshToken } = useAuth();
   const toast = useRef<Toast>(null);
+  const [emailIsInvalid, setEmailIsInavlid] = useState<boolean>(false);
   const [user, setUser] = useState<LoginRequest>({
     email: "",
     password: "",
@@ -56,9 +57,15 @@ const Login = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-
     handleRememberMe(rememberMe);
+    const emailIsValid = user.email.includes("@");
 
+    if (!emailIsValid) {
+      setEmailIsInavlid(true);
+      return;
+    } else {
+      setEmailIsInavlid(false);
+    }
     const response = await AuthService.login(user);
 
     if (response.success) {
@@ -131,16 +138,25 @@ const Login = () => {
               </h6>
               <form
                 onSubmit={handleSubmit}
-                className="d-flex flex-column justify-space-between gap-3 w-80 space-y-4"
+                className="d-flex flex-column justify-space-between gap-3 w-80 space-y-4 "
               >
-                <InputText
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={user.email}
-                  onChange={handleChange}
-                  required
-                />
+                <div className="w-100">
+                  <InputText
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={user.email}
+                    onChange={handleChange}
+                    required
+                    className={emailIsInvalid ? "p-invalid w-100" : "w-100"}
+                  />
+                  {emailIsInvalid && (
+                    <p className="text-danger mt-1 mb-0">
+                      Please enter a valid email address.
+                    </p>
+                  )}
+                </div>
+
                 <Password
                   feedback={false}
                   name="password"
