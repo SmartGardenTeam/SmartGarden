@@ -61,10 +61,10 @@ const Login = () => {
     const emailIsValid = user.email.includes("@");
 
     if (!emailIsValid) {
-      setEmailIsInavlid((valid) => !valid);
+      setEmailIsInavlid(true);
       return;
     } else {
-      setEmailIsInavlid((valid) => !valid);
+      setEmailIsInavlid(false);
     }
     const response = await AuthService.login(user);
 

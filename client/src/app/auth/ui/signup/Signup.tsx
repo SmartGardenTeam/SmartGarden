@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  Reducer,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { ChangeEvent, useReducer, useRef, useState } from "react";
 import AuthService from "../../services/AuthService";
 import { InputText } from "primereact/inputtext";
 import { SignupRequest } from "../../models/SignupRequest";
@@ -18,13 +11,7 @@ import SignInImage from "../../../../assets/images/LoginAndSignup.svg";
 import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
 import "./Signup.module.scss";
 import { Password } from "primereact/password";
-import classes from "./Signup.module.scss";
 
-type SignupRequest = {
-  username: string;
-  email: string;
-  password: string;
-};
 type Action = { type: "SET_FIELD"; field: keyof SignupRequest; value: string };
 
 const fnReducer = (state: SignupRequest, action: Action): SignupRequest => {
@@ -197,7 +184,7 @@ const Signup = () => {
                   toggleMask
                 />
                 {!isPasswordValid && (
-                  <p className="text-danger mb-0">Passwords do not match!</p>
+                  <p className="text-danger mb-0">Passwords do not match.</p>
                 )}
                 <Button
                   value="Sign up"
