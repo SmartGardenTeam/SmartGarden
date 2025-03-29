@@ -1,4 +1,11 @@
-import { ChangeEvent, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  Reducer,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import AuthService from "../../services/AuthService";
 import { InputText } from "primereact/inputtext";
 import { SignupRequest } from "../../models/SignupRequest";
@@ -11,25 +18,67 @@ import SignInImage from "../../../../assets/images/LoginAndSignup.svg";
 import SGLogo from "../../../../assets/images/SmartGardenLogo.svg";
 import "./Signup.module.scss";
 import { Password } from "primereact/password";
+import classes from "./Signup.module.scss";
+
+type SignupRequest = {
+  username: string;
+  email: string;
+  password: string;
+};
+type Action = { type: "SET_FIELD"; field: keyof SignupRequest; value: string };
+
+const fnReducer = (state: SignupRequest, action: Action): SignupRequest => {
+  switch (action.type) {
+    case "SET_FIELD":
+      return {
+        ...state,
+        [action.field]: action.value,
+      };
+    default:
+      return state;
+  }
+};
 
 const Signup = () => {
-  const [user, setUser] = useState<SignupRequest>({
+  const initialState = {
     username: "",
     email: "",
     password: "",
-  });
+  };
+  const [user, dispatch] = useReducer(fnReducer, initialState);
+  const [repeatPassword, setRepeatPassword] = useState<string>("");
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
   const { setCurrentUser } = useUser();
-
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
   const navigate = useNavigate();
   const toast = useRef<Toast>(null);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, [event.target?.name]: event.target.value });
+    dispatch({
+      type: "SET_FIELD",
+      field: event.target.name as keyof SignupRequest,
+      value: event.target.value,
+    });
   };
-
+  const handleRepeatPassword = (event: ChangeEvent<HTMLInputElement>) => {
+    setRepeatPassword(event.target.value);
+  };
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    const emailIsValid = user.email.includes("@");
+    if (!emailIsValid) {
+      setIsEmailValid(false);
+      return;
+    } else {
+      setIsEmailValid(true);
+    }
 
+    const passwordsMatch = user.password === repeatPassword;
+    setIsPasswordValid(passwordsMatch);
+
+    if (passwordsMatch) {
+      return;
+    }
     const response = await AuthService.signup(user);
 
     if (response.success) {
@@ -105,6 +154,7 @@ const Signup = () => {
                   placeholder="Email"
                   value={user.email}
                   onChange={handleChange}
+                  className={!isEmailValid ? "p-invalid w-100" : "w-100"}
                   required
                 />
 
@@ -114,9 +164,41 @@ const Signup = () => {
                   placeholder="Password"
                   value={user.password}
                   onChange={handleChange}
+                  pt={{
+                    input: {
+                      style: isPasswordValid
+                        ? { width: "100%" }
+                        : { width: "100%", borderColor: "red" },
+                    },
+                    root: {
+                      style: { width: "100%" },
+                    },
+                  }}
                   required
                   toggleMask
                 />
+                <Password
+                  type="password"
+                  name="repeatPassword"
+                  placeholder="Repeat Password"
+                  value={repeatPassword}
+                  onChange={handleRepeatPassword}
+                  pt={{
+                    input: {
+                      style: isPasswordValid
+                        ? { width: "100%" }
+                        : { width: "100%", borderColor: "red" },
+                    },
+                    root: {
+                      style: { width: "100%" },
+                    },
+                  }}
+                  required
+                  toggleMask
+                />
+                {!isPasswordValid && (
+                  <p className="text-danger mb-0">Passwords do not match!</p>
+                )}
                 <Button
                   value="Sign up"
                   label="Sign up"
