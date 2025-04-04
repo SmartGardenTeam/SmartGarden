@@ -15,12 +15,15 @@ import { PlantModel } from "../../../plant/models/PlantModel";
 import PlantService from "../../../plant/services/PlantService";
 import PlantInfo from "../../../plant/ui/plant-info-card/PlantInfo";
 import BreadCrumbs from "../bread-crumbs/BreadCrumbs";
+import MetricsService from "../../../metrics/service/MetricService";
+import { FullMetricsResponse } from "../../../metrics/models/FullMetricsResponse";
 
 const Garden = () => {
   const toast = useRef<Toast>(null);
   const params = useParams();
   const [garden, SetGarden] = useState<GardenModel | null>(null);
   const [plant, SetPlant] = useState<PlantModel | null>(null);
+  const [metrics, SetMetrics] = useState<FullMetricsResponse[] | null>(null);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: "contains" },
@@ -33,15 +36,30 @@ const Garden = () => {
         const plantResponse = await PlantService.findPlantByGardenId(
           params.gardenId
         );
+        const metricResponse = await MetricsService.getAllGardenMetrics(
+          params.gardenId
+        );
 
-        if (response.success && plantResponse.success) {
+        if (
+          response.success &&
+          plantResponse.success &&
+          metricResponse.success
+        ) {
           SetGarden(response.data);
           SetPlant(plantResponse.data);
+          SetMetrics(metricResponse.data);
         } else if (!response.success) {
           toast.current?.show({
             severity: "error",
             summary: "Error",
             detail: response.errors[0],
+            life: 3000,
+          });
+        } else if (!metricResponse.success) {
+          toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: metricResponse.errors[0],
             life: 3000,
           });
         } else {
@@ -63,17 +81,18 @@ const Garden = () => {
     };
 
     fetchGarden();
-    // ProductService.getProductsMini().then(data => setProducts(data));
+    console.log(metrics);
   }, [params.gardenId]);
 
-  // const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value ||;
-  //   let _filters = { ...filters };
-  //   _filters["global"].value = value;
+  const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+    //@ts-ignore
+    _filters["global"].value = value;
 
-  //   setFilters(_filters);
-  //   setGlobalFilter(value);
-  // };
+    setFilters(_filters);
+    setGlobalFilter(value);
+  };
 
   return (
     <>
@@ -116,41 +135,17 @@ const Garden = () => {
                 <i className="pi pi-search ms-4 " />
                 <InputText
                   value={globalFilter}
-                  //onChange={onGlobalFilterChange}
+                  onChange={onGlobalFilterChange}
                   placeholder="Global Search"
                   className="ms-1 ps-5"
                 />
               </span>{" "}
               <DataTable
-                //value={}
+                value={metrics ? metrics : undefined}
                 removableSort
                 tableStyle={{ minWidth: "50rem" }}
                 globalFilter={globalFilter}
               >
-                <Column
-                  field="ph"
-                  header="Ph"
-                  sortable
-                  style={{ width: "12.5%" }}
-                ></Column>
-                <Column
-                  field="waterTemp"
-                  header="WaterTemp"
-                  sortable
-                  style={{ width: "12.5%" }}
-                ></Column>
-                <Column
-                  field="airTemp"
-                  header="AirTemp"
-                  sortable
-                  style={{ width: "12.5%" }}
-                ></Column>
-                <Column
-                  field="kwh"
-                  header="Kwh"
-                  sortable
-                  style={{ width: "12.5%" }}
-                ></Column>
                 <Column
                   field="moisture"
                   header="Moisture"
@@ -158,19 +153,25 @@ const Garden = () => {
                   style={{ width: "12.5%" }}
                 ></Column>
                 <Column
-                  field="o2"
-                  header="O2"
+                  field="phofWater"
+                  header="WaterPH"
                   sortable
                   style={{ width: "12.5%" }}
                 ></Column>
                 <Column
-                  field="ec"
-                  header="EC"
+                  field="airTemperature"
+                  header="AirTemp"
                   sortable
                   style={{ width: "12.5%" }}
                 ></Column>
                 <Column
-                  field="date"
+                  field="waterTemperature"
+                  header="WaterTemp"
+                  sortable
+                  style={{ width: "12.5%" }}
+                ></Column>
+                <Column
+                  field="timestamp"
                   header="Date/Time"
                   sortable
                   style={{ width: "12.5%" }}
