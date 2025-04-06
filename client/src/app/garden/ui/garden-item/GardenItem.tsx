@@ -5,6 +5,13 @@ import fonts from "../../../../assets/styles/FontFamilies.module.scss";
 import greenSalad from "../../../../assets/images/greenSalad.svg";
 import GardenItemStats from "../garden-item-stats/GardenItemStats";
 import { Link } from "react-router-dom";
+import { MetricsResponse } from "../../../metrics/models/MetricsResponse";
+
+interface GardenItem {
+  id: number;
+  name: string;
+  metricResponse: MetricsResponse;
+}
 
 const GardenItem = ({ id, name, metricsResponse }: GardenItemProps) => {
   const gardenItemProps = {

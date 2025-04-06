@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
 import classes from "./BreadCrumbs.module.scss";
 import fonts from "../../../../assets/styles/FontFamilies.module.scss";
-const BreadCrumbs = ({ GardenName, PlantName }) => {
+
+interface BreadCrumbsProps {
+  GardenName: string;
+  PlantName: string;
+}
+
+const BreadCrumbs = ({ GardenName, PlantName }: BreadCrumbsProps) => {
   return (
     <>
       {!GardenName && !PlantName && <p>Data is loading</p>}

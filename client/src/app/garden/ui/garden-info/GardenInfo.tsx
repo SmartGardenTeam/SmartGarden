@@ -1,8 +1,10 @@
 import GreenSalad from "../../../../assets/images/greenSalad.svg";
 import fonts from "../../../../assets/styles/FontFamilies.module.scss";
 import classes from "./Gardeninfo.module.scss";
-
-const GardenInfo = ({ name }) => {
+interface GardenInfoProps {
+  name?: string;
+}
+const GardenInfo = ({ name }: GardenInfoProps) => {
   return (
     <div className="col position-relative card-background rounded-4 p-3 pb-3">
       <div className="pe-2 pb-4 ">
