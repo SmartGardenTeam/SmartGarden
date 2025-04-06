@@ -18,6 +18,17 @@ import BreadCrumbs from "../bread-crumbs/BreadCrumbs";
 import MetricsService from "../../../metrics/service/MetricService";
 import { FullMetricsResponse } from "../../../metrics/models/FullMetricsResponse";
 
+function formatDate(timestamp: Date) {
+  const date = new Date(timestamp);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+
+  return `${hours}:${minutes}h ${day}.${month}.${year}`;
+}
+
 const Garden = () => {
   const toast = useRef<Toast>(null);
   const params = useParams();
@@ -172,9 +183,10 @@ const Garden = () => {
                 ></Column>
                 <Column
                   field="timestamp"
-                  header="Date/Time"
+                  header="Time/Date"
                   sortable
                   style={{ width: "12.5%" }}
+                  body={(rowData) => formatDate(rowData.timestamp)}
                 ></Column>
               </DataTable>
             </div>
